@@ -1,6 +1,7 @@
 ## libaddon for Anki <!-- omit in toc -->
 
-Add-on development package for the spaced-repetition flashcard app [Anki](https://apps.ankiweb.net/). Used in my more complex Anki add-ons. **N.B.: Not fit for general use, yet**.
+Add-on development package for the spaced-repetition flashcard app [Anki](https://apps.ankiweb.net/). Used in my more complex Anki add-ons.
+**Warning: Not fit for general use, yet**.
 
 ### Table of Contents <!-- omit in toc -->
 
@@ -15,4 +16,9 @@ Add-on development package for the spaced-repetition flashcard app [Anki](https:
 
 *libaddon* is *Copyright © 2016-2019 [Aristotelis P.](https://glutanimate.com/)*
 
-Licensed under the [GNU AGPLv3](https://www.gnu.org/licenses/agpl.html).
+*libaddon* is free and open-source software. The code that runs within Anki is
+released under the GNU AGPLv3 license, extended by a number of additional terms.
+This program is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY.
+
+For more information please see [LICENSE](./LICENSE).
