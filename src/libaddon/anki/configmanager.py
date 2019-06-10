@@ -136,7 +136,7 @@ class ConfigManager(object):
             self._storages["local"]["default"] = self._getLocalDefaults()
             self._setupLocalHooks()
         self._setupSaveHooks()
-        if not ANKI20 and conf_action:
+        if conf_action:
             self.setConfigAction(conf_action)
         if preload:
             self._maybeLoad()
@@ -385,8 +385,10 @@ class ConfigManager(object):
         self.mw.addonManager.setConfigAction(MODULE_ADDON, action)
 
     def _setupLocalHooks(self):
+        if ANKI20:
+            return
         self.mw.addonManager.setConfigUpdatedAction(
-            MODULE_ADDON, lambda: self.save(storage="local"))
+            MODULE_ADDON, self._onLocalConfigUpdated)
 
     # Local storage
     ######################################################################
@@ -437,6 +439,11 @@ class ConfigManager(object):
             self.mw.addonManager.writeConfig(MODULE_ADDON, config)
         else:
             self._writeAddonMeta20({"config": config})
+
+    def _onLocalConfigUpdated(self, new_config):
+        # Anki has written new config to disk, so no need to set dirty
+        # just update our own cache
+        self._config["local"] = new_config
 
     # Synced storage
     ######################################################################
