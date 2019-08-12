@@ -80,9 +80,13 @@ def schedVer():
     return mw.col.schedVer()
 
 
-def pathUserfiles():
+def pathUserFiles():
     user_files = os.path.join(PATH_THIS_ADDON, "user_files")
     return ensureExists(user_files)
+
+
+def pathMediaFiles():
+    return mw.col.media.dir()
 
 
 def checkAnkiVersion(lower, upper=None):
