@@ -62,11 +62,11 @@ name_components = __name__.split(".")
 MODULE_ADDON = name_components[0]
 MODULE_LIBADDON = name_components[1]
 
+PATH_ADDONS = mw.pm.addonFolder()
+
 if ANKI20:
-    PATH_ADDONS = mw.pm.addonFolder()
     JSPY_BRIDGE = "py.link"
 else:
-    PATH_ADDONS = mw.addonManager.addonsFolder()
     JSPY_BRIDGE = "pycmd"
 
 PATH_THIS_ADDON = os.path.join(PATH_ADDONS, MODULE_ADDON)
