@@ -72,6 +72,14 @@ else:
 PATH_THIS_ADDON = os.path.join(PATH_ADDONS, MODULE_ADDON)
 
 
+def schedVer():
+    if ANKI20:
+        return 1
+    if not mw.col:  # collection not loaded
+        return None
+    return mw.col.schedVer()
+
+
 def pathUserfiles():
     user_files = os.path.join(PATH_THIS_ADDON, "user_files")
     return ensureExists(user_files)
