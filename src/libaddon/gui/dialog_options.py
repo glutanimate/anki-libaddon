@@ -111,10 +111,11 @@ class OptionsDialog(MappedDialog):
         if hasattr(self.form, "htmlAbout"):
             about_string = get_about_string()
             self.form.htmlAbout.setHtml(about_string)
+            self.form.htmlAbout.setOpenLinks(False)
             self.form.htmlAbout.anchorClicked.connect(self._linkHandler)
 
     def _setupLabDebug(self):
-        label = getattr(self.form, "labDebug")
+        label = getattr(self.form, "labDebug", None)
         if not label:
             return
         if isDebuggingOn():
