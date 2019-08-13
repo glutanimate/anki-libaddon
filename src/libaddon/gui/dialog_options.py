@@ -45,7 +45,7 @@ from ..platform import PLATFORM
 from ..debug import toggleDebugging, isDebuggingOn, getLatestLog, openLog
 
 from .basic.dialog_mapped import MappedDialog
-from .about import get_about_string
+from .about import getAboutString
 from .labelformatter import formatLabels
 
 
@@ -109,7 +109,7 @@ class OptionsDialog(MappedDialog):
         Fill out 'about' widget
         """
         if hasattr(self.form, "htmlAbout"):
-            about_string = get_about_string()
+            about_string = getAboutString(showDebug=True)
             self.form.htmlAbout.setHtml(about_string)
             self.form.htmlAbout.setOpenLinks(False)
             self.form.htmlAbout.anchorClicked.connect(self._linkHandler)
