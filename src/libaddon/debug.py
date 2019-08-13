@@ -141,3 +141,9 @@ def openLog():
         return False
     from .utils import openFile
     openFile(PATH_LOG)
+
+def clearLog():
+    if not os.path.exists(PATH_LOG):
+        return False
+    with open(PATH_LOG, "w") as f:
+        f.write("")

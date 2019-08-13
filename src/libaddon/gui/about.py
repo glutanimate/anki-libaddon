@@ -99,6 +99,7 @@ debugging_template = """\
     <li><a href="action://debug-toggle">Toggle debugging</a></li>
     <li><a href="action://debug-copy">Copy log to clipboard</a></li>
     <li><a href="action://debug-open">Open log</a></li>
+    <li><a href="action://debug-clear">Clear log</a></li>
 </ul>\
 """
 

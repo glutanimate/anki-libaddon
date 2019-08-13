@@ -42,7 +42,8 @@ from aqt.utils import openLink, tooltip
 
 from ..consts import ADDON
 from ..platform import PLATFORM
-from ..debug import toggleDebugging, isDebuggingOn, getLatestLog, openLog
+from ..debug import (toggleDebugging, isDebuggingOn,
+                     getLatestLog, openLog, clearLog)
 
 from .basic.dialog_mapped import MappedDialog
 from .about import getAboutString
@@ -158,6 +159,8 @@ class OptionsDialog(MappedDialog):
             self._openDebuglog()
         elif cmd == "debug-copy":
             self._copyDebuglog()
+        elif cmd == "debug-clear":
+            self._clearDebuglog()
         elif cmd == "changelog":
             self._openChangelog()
 
@@ -188,6 +191,13 @@ class OptionsDialog(MappedDialog):
         if not changelog:
             return
         openLink(changelog)
+
+    def _clearDebuglog(self):
+        ret = clearLog()
+        if ret is False:
+            tooltip("No debug log has been recorded, yet")
+            return False
+        tooltip("Debug log cleared")
 
     # Exit handling
 
