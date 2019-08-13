@@ -41,12 +41,13 @@ from aqt.qt import Qt, QUrl, QApplication
 from aqt.utils import openLink, tooltip
 
 from ..consts import ADDON
-from ..platform import PLATFORM, ANKI20
-from ..debug import toggleDebugging, getLatestLog, openLog
+from ..platform import PLATFORM
+from ..debug import toggleDebugging, isDebuggingOn, getLatestLog, openLog
 
 from .basic.dialog_mapped import MappedDialog
 from .about import get_about_string
 from .labelformatter import formatLabels
+
 
 class OptionsDialog(MappedDialog):
 
@@ -81,12 +82,13 @@ class OptionsDialog(MappedDialog):
             form_module=form_module, parent=parent)
         # Instance methods that modify the initialized UI should either be
         # called from self._setupUI or from here
-    
+
     # Static widget setup
 
     def _setupUI(self):
         formatLabels(self, self._linkHandler)
         self._setupAbout()
+        self._setupLabDebug()
 
         if PLATFORM == "mac":
             # Decrease tab margins on macOS
@@ -111,6 +113,16 @@ class OptionsDialog(MappedDialog):
             self.form.htmlAbout.setHtml(about_string)
             self.form.htmlAbout.anchorClicked.connect(self._linkHandler)
 
+    def _setupLabDebug(self):
+        label = getattr(self.form, "labDebug")
+        if not label:
+            return
+        if isDebuggingOn():
+            label.setText(
+                "<span style='color:#ff0000;'><b>DEBUG ACTIVE</b></span>")
+        else:
+            label.setText("")
+
     # Events
 
     def keyPressEvent(self, evt):
@@ -130,6 +142,8 @@ class OptionsDialog(MappedDialog):
                 continue
             btn_widget.clicked.connect(lambda _, link=link: openLink(link))
 
+    # Link actions
+
     def _linkHandler(self, url):
         """Support for binding custom actions to text links"""
         if isinstance(url, QUrl):
@@ -140,7 +154,7 @@ class OptionsDialog(MappedDialog):
         if cmd == "debug-toggle":
             self._toggleDebugging()
         elif cmd == "debug-open":
-            openLog()
+            self._openDebuglog()
         elif cmd == "debug-copy":
             self._copyDebuglog()
         elif cmd == "changelog":
@@ -152,16 +166,29 @@ class OptionsDialog(MappedDialog):
         else:
             msg = "disabled"
         tooltip("Debugging {msg}".format(msg=msg))
-    
+        self._setupLabDebug()
+
     def _copyDebuglog(self):
-        QApplication.clipboard().setText(getLatestLog())
+        log = getLatestLog()
+        if log is False:
+            tooltip("No debug log has been recorded, yet")
+            return False
+        QApplication.clipboard().setText(log)
         tooltip("Copied to clipboard")
+
+    def _openDebuglog(self):
+        ret = openLog()
+        if ret is False:
+            tooltip("No debug log has been recorded, yet")
+            return False
 
     def _openChangelog(self):
         changelog = ADDON.LINKS.get("changelog")
         if not changelog:
             return
         openLink(changelog)
+
+    # Exit handling
 
     def _onAccept(self):
         """Executed only if dialog confirmed"""
