@@ -184,6 +184,33 @@ class ConfigManager(object):
         """
         return self._config.__str__()
 
+    # Attribute interface
+    ######################################################################
+    
+    @property
+    def local(self):
+        return self.__getitem__("local")
+    
+    @local.setter
+    def local(self, value):
+        return self.__setitem__("local", value)
+    
+    @property
+    def synced(self):
+        return self.__getitem__("synced")
+
+    @synced.setter
+    def synced(self, value):
+        return self.__setitem__("synced", value)
+    
+    @property
+    def profile(self):
+        return self.__getitem__("profile")
+
+    @profile.setter
+    def profile(self, value):
+        return self.__setitem__("profile", value)
+
     # Regular interface
     ######################################################################
 
