@@ -61,7 +61,7 @@ NUMERICTYPES = (int, float)
 LISTTYPES = (list, tuple)
 
 
-class CommonWidgetInterface(object):
+class CommonWidgetInterface:
     """
     Common interface to Qt widgets
 

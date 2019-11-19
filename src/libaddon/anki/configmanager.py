@@ -53,7 +53,7 @@ class ConfigError(Exception):
     pass
 
 
-class ConfigManager(object):
+class ConfigManager:
 
     """
     Generic add-on configuration manager for Anki

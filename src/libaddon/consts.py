@@ -33,7 +33,7 @@
 Package-wide constants
 """
 
-class ADDON(object):
+class ADDON:
     """Class storing general add-on properties
     Property names need to be all-uppercase with no leading underscores.
     Should be updated by add-on on initialization.
