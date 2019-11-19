@@ -33,9 +33,6 @@
 Add-on configuration management
 """
 
-from __future__ import (absolute_import, division,
-                        print_function, unicode_literals)
-
 import os
 
 from anki.hooks import addHook, runHook
@@ -460,9 +457,6 @@ class ConfigManager(object):
         Storage locations (add-on folder):
             - meta.json: user-specific
             - config.json: add-on defaults
-
-        Anki 2.1: Managed by Anki.
-        Anki 2.0: Managed by ConfigManager.
 
         Returns:
             dict -- Dictionary of config values

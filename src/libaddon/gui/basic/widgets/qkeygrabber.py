@@ -35,9 +35,6 @@ Custom hotkey selector
 NOTE: obsolete on PyQt5
 """
 
-from __future__ import (absolute_import, division,
-                        print_function, unicode_literals)
-
 from ....platform import PLATFORM
 
 from .qt import QDialog, QPushButton, QVBoxLayout, QLabel, Qt, QKeySequence
@@ -51,6 +48,7 @@ PLATFORM_MODKEY_NAMES = {
             "alt": "Option", "shift": "Shift"}
 }
 
+
 class QKeyGrabButton(QPushButton):
     def __init__(self, parent=None, key_string=""):
         super(QKeyGrabButton, self).__init__("", parent=parent)
@@ -62,7 +60,7 @@ class QKeyGrabButton(QPushButton):
         qkeyseq = QKeySequence(key_string, QKeySequence.PortableText)
         native_key_string = qkeyseq.toString(format=QKeySequence.NativeText)
         self.setText(native_key_string)
-    
+
     def key(self):
         return self.key_string
 
@@ -85,7 +83,7 @@ class QKeyGrab(QDialog):
     Based in part on ImageResizer by searene
     (https://github.com/searene/Anki-Addons)
     """
-    
+
     modkey_names = PLATFORM_MODKEY_NAMES[PLATFORM]
 
     def __init__(self, parent):

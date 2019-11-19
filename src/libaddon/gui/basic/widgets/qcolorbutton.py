@@ -33,10 +33,8 @@
 Custom color-chooser
 """
 
-from __future__ import (absolute_import, division,
-                        print_function, unicode_literals)
-
 from .qt import QPushButton, QColorDialog, QPixmap, QColor, QIcon, QSize
+
 
 class QColorButton(QPushButton):
     def __init__(self, parent=None, color="#000000"):
@@ -62,9 +60,9 @@ class QColorButton(QPushButton):
         self.setIcon(QIcon(pixmap))
         self.setIconSize(QSize(128, 18))
         self.color = color
-    
+
     def color(self):
         return self.color
-    
+
     def setColor(self, color):
         self._updateButtonColor(color)

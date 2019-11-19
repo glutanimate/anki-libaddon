@@ -34,9 +34,6 @@
 Qt imports
 """
 
-from __future__ import (absolute_import, division,
-                        print_function, unicode_literals)
-
 # extracted from aqt.qt:
 import sip
 
