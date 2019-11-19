@@ -39,23 +39,16 @@ from __future__ import (absolute_import, division,
 from aqt.qt import *
 
 from ..consts import ADDON
-from ..platform import ANKI20
 
 format_dict = {
     "ADDON_NAME": ADDON.NAME,
     "ADDON_VERSION": ADDON.VERSION,
 }
 
-if not ANKI20:
-    fmt_find_params = ((QLabel, QPushButton), QRegExp(".*"),
-                       Qt.FindChildrenRecursively)
-else:
-    # Qt4: recursive by default. No third param.
-    fmt_find_params = ((QLabel, QPushButton), QRegExp(".*"))
-
 
 def formatLabels(dialog, linkhandler=None):
-    for widget in dialog.findChildren(*fmt_find_params):
+    for widget in dialog.findChildren((QLabel, QPushButton), QRegExp(".*"),
+                                      Qt.FindChildrenRecursively):
         if widget.objectName().startswith("fmt"):
             widget.setText(widget.text().format(**format_dict))
         if linkhandler and isinstance(widget, QLabel):

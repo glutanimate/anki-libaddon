@@ -33,16 +33,8 @@
 Generate 'about' info, including credits, copyright, etc.
 """
 
-from __future__ import (absolute_import, division,
-                        print_function, unicode_literals)
 
 from ..consts import ADDON
-from ..platform import ANKI20
-
-if not ANKI20:
-    string = str
-else:
-    import string
 
 libs_header = (
     "<p>{} ships with the following third-party code:</p>".format(ADDON.NAME))
@@ -115,6 +107,7 @@ title_template = """\
 <h3>About {display_name} (v{version})</h3>\
 """
 
+
 def getAboutString(title=False, showDebug=False):
     authors_string = "\n".join(authors_template.format(**dct)
                                for dct in ADDON.AUTHORS)
@@ -125,7 +118,7 @@ def getAboutString(title=False, showDebug=False):
     else:
         libs_string = ""
     contributors_string = "<p>With patches from: <i>{}</i></p>".format(
-        ", ".join(sorted(ADDON.CONTRIBUTORS, key=string.lower))
+        ", ".join(sorted(ADDON.CONTRIBUTORS, key=str.lower))
     )
 
     members_top_string = "<b>{}</b>".format(", ".join(ADDON.MEMBERS_TOP))
@@ -138,7 +131,7 @@ def getAboutString(title=False, showDebug=False):
                                              version=ADDON.VERSION)
     else:
         title_string = ""
-        
+
     if showDebug:
         debugging = debugging_template
     else:

@@ -33,9 +33,6 @@
 Main options dialog
 """
 
-from __future__ import (absolute_import, division,
-                        print_function, unicode_literals)
-
 from aqt.qt import Qt, QUrl, QApplication
 
 from aqt.utils import openLink, tooltip

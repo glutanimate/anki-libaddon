@@ -33,10 +33,6 @@
 Provides information on Anki version and platform
 """
 
-from __future__ import (absolute_import, division,
-                        print_function, unicode_literals)
-
-import sys
 import os
 
 from aqt import mw
@@ -53,28 +49,18 @@ elif isWin:
 else:
     PLATFORM = "lin"
 
-SYS_ENCODING = sys.getfilesystemencoding()
-PYTHON3 = sys.version_info[0] == 3
-ANKI20 = anki_version.startswith("2.0.")
-
 name_components = __name__.split(".")
 
 MODULE_ADDON = name_components[0]
 MODULE_LIBADDON = name_components[1]
 
 PATH_ADDONS = mw.pm.addonFolder()
-
-if ANKI20:
-    JSPY_BRIDGE = "py.link"
-else:
-    JSPY_BRIDGE = "pycmd"
-
 PATH_THIS_ADDON = os.path.join(PATH_ADDONS, MODULE_ADDON)
+
+JSPY_BRIDGE = "pycmd"
 
 
 def schedVer():
-    if ANKI20:
-        return 1
     if not mw.col:  # collection not loaded
         return None
     return mw.col.schedVer()

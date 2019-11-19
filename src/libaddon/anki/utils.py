@@ -33,11 +33,8 @@
 Utility functions for interacting with Anki
 """
 
-import os
-
 from aqt import mw
 
-from ..platform import ANKI20, PATH_ADDONS
 from ..consts import ADDON
 
 
@@ -45,22 +42,11 @@ def debugInfo():
     """Return verbose info on add-ons and Anki installation"""
     info = ["{name} version {version}".format(name=ADDON.NAME,
                                               version=ADDON.VERSION)]
-    if ANKI20:
-        from aqt.qt import QT_VERSION_STR, PYQT_VERSION_STR
-        from aqt import appVersion
-        from anki.utils import platDesc
-        info.append("Anki {version} (Qt {qt} PyQt {pyqt})".format(
-            version=appVersion, qt=QT_VERSION_STR, pyqt=PYQT_VERSION_STR))
-        info.append(platDesc())
-        files = [f for f in os.listdir(PATH_ADDONS)
-                 if f.endswith(".py")]
-        info.append("Add-ons:\n\n" + repr(files))
-    else:
-        from aqt.utils import supportText
-        info.append(supportText())
+    from aqt.utils import supportText
+    info.append(supportText())
 
-        addmgr = mw.addonManager
-        info.append("Add-ons:\n\n" + "\n".join(
-            addmgr.annotatedName(d) for d in addmgr.allAddons()))
+    addmgr = mw.addonManager
+    info.append("Add-ons:\n\n" + "\n".join(
+        addmgr.annotatedName(d) for d in addmgr.allAddons()))
 
     return "\n\n".join(info)

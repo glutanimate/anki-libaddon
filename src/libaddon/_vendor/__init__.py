@@ -32,18 +32,3 @@
 """
 Vendorized third-party packages
 """
-
-from ..packaging import VersionSpecificImporter
-
-# New vendored packages should be appended here:
-names = [
-    "packaging",
-    "markdown2",
-    "logging"
-]
-
-# NOTE: VersionSpecificImporter does not resolve absolute imports within
-# vendored packages. These will still need to be updated manually if
-# necessary
-
-VersionSpecificImporter(__name__, managed_imports=names).install()

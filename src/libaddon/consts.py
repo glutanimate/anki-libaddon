@@ -33,23 +33,6 @@
 Package-wide constants
 """
 
-from __future__ import (absolute_import, division,
-                        print_function, unicode_literals)
-
-
-def setAddonProperties(addon):
-    """Update ADDON class properties from another ADDON class
-    
-    Arguments:
-        addon {object} -- an ADDON class with properties stored as class
-                          attributes
-    """
-    for key, value in addon.__dict__.items():
-        if key.startswith("__") and key.endswith("__"):
-            # ignore special attributes
-            continue
-        setattr(ADDON, key, value)
-
 class ADDON(object):
     """Class storing general add-on properties
     Property names need to be all-uppercase with no leading underscores.
@@ -69,3 +52,11 @@ class ADDON(object):
     MEMBERS_CREDITED = ()
     MEMBERS_TOP = ()
     LINKS = {}
+    
+    @classmethod
+    def update(cls, addon_obj: "ADDON"):
+        for key, value in addon_obj.__dict__.items():
+            if key.startswith("__") and key.endswith("__"):
+                # ignore special attributes
+                continue
+            setattr(cls, key, value)

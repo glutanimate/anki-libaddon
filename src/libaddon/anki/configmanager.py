@@ -37,15 +37,13 @@ from __future__ import (absolute_import, division,
                         print_function, unicode_literals)
 
 import os
-import io
 
-from anki.utils import json
 from anki.hooks import addHook, runHook
 
 from .._vendor.packaging import version
 
 from ..utils import deepMergeDicts
-from ..platform import ANKI20, PATH_THIS_ADDON, MODULE_ADDON
+from ..platform import PATH_THIS_ADDON, MODULE_ADDON
 
 DEFAULT_LOCAL_CONFIG_PATH = os.path.join(PATH_THIS_ADDON, "config.json")
 DEFAULT_LOCAL_META_PATH = os.path.join(PATH_THIS_ADDON, "meta.json")
@@ -85,7 +83,7 @@ class ConfigManager(object):
                  reset_req=False, preload=False):
         """
         Initialize a new config manager object with the provided storages
-        
+
         Defaults to initializing local storage.
 
         Arguments:
@@ -97,32 +95,32 @@ class ConfigManager(object):
                 limited to the ones listed in _supported_storages. Each
                 key, with the exception of the local storage type, should
                 be mapped to a dictionary of default config values.
-                
+
                 There is no need to supply a default dictionary for the
                 local storage type, as it will automatically be read
                 from the config.json file.
                 (default: {{"local": None}})
-            
+
             conf_key {str}:
                 Dictionary key to use when saving storage types that use Anki's
                 databases. Set to the topmost add-on module name by default.
                 (e.g. "review_heatmap")
                 (default: {MODULE_ADDON})
-            
+
             conf_action {function}:
                 Function/method to call when user clicks on configure button
                 (2.1-specific) (default: {None})
-            
+
             reset_req {bool}:
                 Whether we should fire a reset event when the
                 configuration is saved (e.g. to update parts of Anki's UI)
                 (default: {False})
-            
+
             preload {bool}:
                 Whether or not to load all available configuration storages
                 at profile load time. By default storages will only
                 be loaded on demand. (default: {False})
-        
+
         """
         self.mw = mw
         self._reset_req = reset_req
@@ -136,13 +134,13 @@ class ConfigManager(object):
             }
             for name, default in config_dict.items()
         }
-        
+
         self.conf_action = self.conf_updated_action = None
         self._setupAnkiHooks(conf_action=conf_action)
         self._setupCustomHooks()
-        
+
         self._config = {}
-        
+
         if preload:
             self._maybeLoad()
 
@@ -186,15 +184,15 @@ class ConfigManager(object):
 
     # Attribute interface
     ######################################################################
-    
+
     @property
     def local(self):
         return self.__getitem__("local")
-    
+
     @local.setter
     def local(self, value):
         return self.__setitem__("local", value)
-    
+
     @property
     def synced(self):
         return self.__getitem__("synced")
@@ -202,7 +200,7 @@ class ConfigManager(object):
     @synced.setter
     def synced(self, value):
         return self.__setitem__("synced", value)
-    
+
     @property
     def profile(self):
         return self.__getitem__("profile")
@@ -249,18 +247,18 @@ class ConfigManager(object):
             storages = [storage_name]  # limit to specific storage
         else:
             storages = self._storages
-        
+
         for name in storages:
             self._checkStorage(name)
             saver = getattr(self, "_save" + name.capitalize())
             saver(self._config[name])
             self._storages[name]["dirty"] = False
-        
+
         self.afterSave(reset=reset, profile_unload=profile_unload)
 
     def afterSave(self, reset=False, profile_unload=False):
         """Trigger actions that are supposed to be run after saving config
-        
+
         Keyword Arguments:
             profile_unload {bool} -- whether save has been triggered on profile
                                      unload
@@ -357,7 +355,7 @@ class ConfigManager(object):
         for name, storage_dict in self._storages.items():
             if not storage_dict["dirty"]:
                 continue
-            
+
             try:
                 self.save(name, profile_unload=True)
             except FileNotFoundError as e:
@@ -378,9 +376,10 @@ class ConfigManager(object):
             action {function} -- Function to call
         """
         self.conf_action = action
-        if not ANKI20 and action:
-            self.mw.addonManager.setConfigAction(
-                MODULE_ADDON, action)
+        if not action:
+            return
+        self.mw.addonManager.setConfigAction(
+            MODULE_ADDON, action)
 
     def setConfigUpdatedAction(self, action):
         """
@@ -391,9 +390,10 @@ class ConfigManager(object):
             action {function} -- Function to call
         """
         self.conf_updated_action = action
-        if not ANKI20 and action:
-            self.mw.addonManager.setConfigUpdatedAction(
-                MODULE_ADDON, action)
+        if not action:
+            return
+        self.mw.addonManager.setConfigUpdatedAction(
+            MODULE_ADDON, action)
 
     # General helper methods
     ######################################################################
@@ -449,30 +449,6 @@ class ConfigManager(object):
             # the existing config action implementation. NOTE: Make sure
             # to save local config when updating outside of config editor
         self.setConfigAction(conf_action)
-        if ANKI20:
-            self._setupAddonMenus20()
-    
-    def _setupAddonMenus20(self):
-        from anki.hooks import wrap
-        from aqt.addons import AddonManager
-        from ..gui.dialog_configeditor import ConfigEditor
-        
-        from ..consts import ADDON
-        from ..platform import PATH_ADDONS
-        
-        def onEdit(mgr, file_path, _old):
-            entry_point = os.path.join(
-                PATH_ADDONS, ADDON.NAME + ".py")
-            if not file_path == entry_point:
-                return _old(mgr, file_path)
-            if self.conf_action:
-                self.conf_action()
-            elif "local" in self._config:
-                ConfigEditor(self, self.mw)
-            else:
-                return _old(mgr, file_path)
-        
-        AddonManager.onEdit = wrap(AddonManager.onEdit, onEdit, "around")
 
     # Local storage
     ######################################################################
@@ -491,14 +467,7 @@ class ConfigManager(object):
         Returns:
             dict -- Dictionary of config values
         """
-        if not ANKI20:
-            return self.mw.addonManager.getConfig(MODULE_ADDON)
-        else:
-            config = self._addonConfigDefaults20()
-            meta = self._addonMeta20()
-            user_conf = meta.get("config", {}) or {}
-            config.update(user_conf)
-            return config
+        return self.mw.addonManager.getConfig(MODULE_ADDON)
 
     def _getLocalDefaults(self):
         """
@@ -507,10 +476,7 @@ class ConfigManager(object):
         Returns:
             dict -- Dictionary of default config values
         """
-        if not ANKI20:
-            return self.mw.addonManager.addonConfigDefaults(MODULE_ADDON)
-        else:
-            return self._addonConfigDefaults20()
+        return self.mw.addonManager.addonConfigDefaults(MODULE_ADDON)
 
     def _saveLocal(self, config):
         """
@@ -519,10 +485,7 @@ class ConfigManager(object):
         Arguments:
             dict -- Dictionary of local config values
         """
-        if not ANKI20:
-            self.mw.addonManager.writeConfig(MODULE_ADDON, config)
-        else:
-            self._writeAddonMeta20({"config": config})
+        self.mw.addonManager.writeConfig(MODULE_ADDON, config)
 
     def onLocalConfigUpdated(self, new_config):
         self._config["local"] = new_config
@@ -612,7 +575,7 @@ class ConfigManager(object):
         # Initialize config
         if conf_key not in storage_obj:
             storage_obj[conf_key] = default_dict
-        
+
         storage_dict = storage_obj[conf_key]
         dict_version = str(storage_dict.get("version", "0.0.0"))
         default_version = str(default_dict["version"])
@@ -628,72 +591,3 @@ class ConfigManager(object):
 
     def _migrateStorage(self, src_storage, dst_storage):
         raise NotImplementedError()
-
-    # Helper methods for local storage on Anki 2.0
-    ######################################################################
-
-    def _addonMeta20(self):
-        """Get meta dictionary
-
-        Reads in meta.json in add-on folder and returns
-        resulting dictionary of user-defined metadata values.
-
-        Note:
-            Anki 2.1 stores both add-on meta data and customized
-            settings in meta.json. In this module we are only dealing
-            with the settings part.
-
-        Returns:
-            dict: config dictionary
-
-        """
-        try:
-            meta = json.load(
-                io.open(DEFAULT_LOCAL_META_PATH, encoding="utf-8"))
-        except (IOError, OSError):
-            meta = None
-        except ValueError as e:
-            print("Could not read meta.json: " + str(e))
-            meta = None
-
-        if not meta:
-            meta = {"config": self._addonConfigDefaults20()}
-            self._writeAddonMeta20(meta)
-
-        return meta
-
-    def _writeAddonMeta20(self, meta):
-        """Write meta dictionary
-
-        Writes meta dictionary to meta.json in add-on folder.
-
-        Args:
-            meta (dict): meta dictionary
-
-        """
-        with io.open(DEFAULT_LOCAL_META_PATH, 'w', encoding="utf-8") as f:
-            content = json.dumps(meta, indent=4, sort_keys=True,
-                                 ensure_ascii=False)
-            f.write(unicode(content))  # noqa: F821
-
-    def _addonConfigDefaults20(self):
-        """Get default config dictionary
-
-        Reads in config.json in add-on folder and returns
-        resulting dictionary of default config values.
-
-        Returns:
-            dict: config dictionary
-
-        Raises:
-            ConfigError: If config.json cannot be parsed correctly.
-                (The assumption being that we would end up in an
-                inconsistent state if we were to return an empty
-                config dictionary. This should never happen.)
-
-        """
-        try:
-            return json.load(io.open(DEFAULT_LOCAL_CONFIG_PATH,
-                                     encoding="utf-8"))
-        except (IOError, OSError, ValueError) as e:
-            raise ConfigError("Config file could not be read: " + str(e))
