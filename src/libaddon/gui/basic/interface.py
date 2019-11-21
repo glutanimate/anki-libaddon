@@ -1041,12 +1041,13 @@ class CommonWidgetInterface:
         """
         family = font_dict.get("family", None)
         size = font_dict.get("size", None)
+        font = QFont()
         bold = font.setBold(font_dict["bold"])
         italic = font_dict.get("italic", None)
 
         assert family is not None and isinstance(family, STRINGTYPES), \
             "font family needs to be provided as a string type"
-        font = Qfont(font_dict["family"])
+        font = QFont(font_dict["family"])
 
         if size is not None:
             assert isinstance(size, (int, float))
