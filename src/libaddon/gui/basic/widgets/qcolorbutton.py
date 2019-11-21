@@ -33,12 +33,14 @@
 Custom color-chooser
 """
 
-from .qt import QPushButton, QColorDialog, QPixmap, QColor, QIcon, QSize
+from PyQt5.QtCore import QSize
+from PyQt5.QtGui import QColor, QIcon, QPixmap
+from PyQt5.QtWidgets import QColorDialog, QPushButton
 
 
 class QColorButton(QPushButton):
     def __init__(self, parent=None, color="#000000"):
-        super(QColorButton, self).__init__(parent=parent)
+        super().__init__(parent=parent)
         self._updateButtonColor(color)
         self.clicked.connect(self._chooseColor)
 

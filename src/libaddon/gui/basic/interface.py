@@ -44,11 +44,19 @@ UIs.
 
 from collections import MutableSequence, MutableSet, MutableMapping
 
+from PyQt5.QtCore import Qt, QDateTime
+from PyQt5.QtGui import QFont
+from PyQt5.QtWidgets import (QCheckBox, QComboBox, QDateEdit, QDoubleSpinBox,
+                             QFontComboBox, QLabel, QLineEdit,
+                             QListWidget, QListWidgetItem, QPlainTextEdit,
+                             QPushButton, QRadioButton, QSlider, QSpinBox,
+                             QTextEdit)
+
 from ...utils import getNestedAttribute
 
-from .widgets.qt import *
 from .widgets.qkeygrabber import QKeyGrabButton
 from .widgets.qcolorbutton import QColorButton
+
 # TODO: Switch to QKeySequenceEdit once Qt4 support dropped
 # TODO: add support for QSlider
 

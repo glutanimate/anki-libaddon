@@ -33,7 +33,8 @@
 Main options dialog
 """
 
-from aqt.qt import Qt, QUrl, QApplication
+from PyQt5.QtCore import Qt, QUrl
+from PyQt5.QtWidgets import QApplication
 
 from aqt.utils import openLink, tooltip
 
@@ -75,7 +76,7 @@ class OptionsDialog(MappedDialog):
         # all widget values it is important that we set these attributes
         # beforehand:
         self.config = config
-        super(OptionsDialog, self).__init__(
+        super().__init__(
             mapped_widgets, self.config.all, self.config.defaults,
             form_module=form_module, parent=parent)
         # Instance methods that modify the initialized UI should either be
@@ -131,10 +132,10 @@ class OptionsDialog(MappedDialog):
         """
         if evt.key() == Qt.Key_Enter or evt.key() == Qt.Key_Return:
             return evt.accept()
-        super(OptionsDialog, self).keyPressEvent(evt)
+        super().keyPressEvent(evt)
 
     def _setupEvents(self):
-        super(OptionsDialog, self)._setupEvents()
+        super()._setupEvents()
         for name, link in ADDON.LINKS.items():
             btn_widget = getattr(self.form, "btn" + name.capitalize(), None)
             if not btn_widget:
@@ -202,4 +203,4 @@ class OptionsDialog(MappedDialog):
         """Executed only if dialog confirmed"""
         self.getData()  # updates self.config in place
         self.config.save()
-        super(OptionsDialog, self)._onAccept()
+        super()._onAccept()

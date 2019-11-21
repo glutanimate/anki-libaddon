@@ -33,7 +33,7 @@
 Miscellaneous Qt utilities
 """
 
-from .qt import QMessageBox
+from PyQt5.QtWidgets import QMessageBox
 
 
 def showInfo(message, parent=None, mode="info", title="Anki"):

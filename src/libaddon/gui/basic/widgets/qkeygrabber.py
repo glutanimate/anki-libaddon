@@ -35,9 +35,12 @@ Custom hotkey selector
 NOTE: obsolete on PyQt5
 """
 
+from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QKeySequence
+from PyQt5.QtWidgets import QDialog, QPushButton, QVBoxLayout, QLabel
+
 from ....platform import PLATFORM
 
-from .qt import QDialog, QPushButton, QVBoxLayout, QLabel, Qt, QKeySequence
 
 PLATFORM_MODKEY_NAMES = {
     "lin": {"meta": "Meta", "ctrl": "Ctrl",
@@ -51,7 +54,7 @@ PLATFORM_MODKEY_NAMES = {
 
 class QKeyGrabButton(QPushButton):
     def __init__(self, parent=None, key_string=""):
-        super(QKeyGrabButton, self).__init__("", parent=parent)
+        super().__init__("", parent=parent)
         self.setKey(key_string)
         self.clicked.connect(self.grabKey)
 

@@ -34,9 +34,10 @@ Simple dialog with support for mapping widget state from/to dictionary
 keys and/or setter/getter methods.
 """
 
+from PyQt5.QtWidgets import QDialogButtonBox
+
 from ...utils import getNestedValue, setNestedValue
 
-from .widgets.qt import *
 from .dialog_basic import BasicDialog
 
 __all__ = ["MappedDialog"]
@@ -143,7 +144,7 @@ class MappedDialog(BasicDialog):
         >     ))
         > )
         """
-        super(MappedDialog, self).__init__(form_module=form_module,
+        super().__init__(form_module=form_module,
                                            parent=parent, **kwargs)
         self._mapped_widgets = mapped_widgets
         self._defaults = defaults
@@ -176,7 +177,7 @@ class MappedDialog(BasicDialog):
     # Events
 
     def _setupEvents(self):
-        super(MappedDialog, self)._setupEvents()
+        super()._setupEvents()
         if getattr(self.form, "buttonBox", None):
             restore_btn = self.form.buttonBox.button(
                 QDialogButtonBox.RestoreDefaults)

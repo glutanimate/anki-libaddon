@@ -33,7 +33,8 @@
 Basic QDialog, extended with some quality-of-life improvements
 """
 
-from .widgets.qt import *
+from PyQt5.QtWidgets import QDialog
+
 from .interface import CommonWidgetInterface
 
 __all__ = ["BasicDialog"]
@@ -42,7 +43,7 @@ __all__ = ["BasicDialog"]
 class BasicDialog(QDialog):
 
     def __init__(self, form_module=None, parent=None, **kwargs):
-        super(BasicDialog, self).__init__(parent=parent, **kwargs)
+        super().__init__(parent=parent, **kwargs)
         self.parent = parent
         self.interface = CommonWidgetInterface(self)
         # Set up UI from pre-generated UI form:
@@ -88,10 +89,10 @@ class BasicDialog(QDialog):
         """Overwrites default accept() to control close actions"""
         self._onClose()
         self._onAccept()
-        super(BasicDialog, self).accept()
+        super().accept()
 
     def reject(self):
         """Overwrites default reject() to control close actions"""
         self._onClose()
         self._onReject()
-        super(BasicDialog, self).reject()
+        super().reject()
