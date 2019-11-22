@@ -33,32 +33,8 @@
 Provides information on Anki version and platform
 """
 
-import os
-
-from aqt import mw
-
-
-from ._vendor.typing import Optional
-
-from .utils import ensureExists
-
-
-def pathUserFiles() -> str:
-    user_files = os.path.join(PATH_THIS_ADDON, "user_files")
-    return ensureExists(user_files)
-
-
-_name_components = __name__.split(".")
-
-MODULE_ADDON = _name_components[0]
-MODULE_LIBADDON = _name_components[1]
-
-
-
-PATH_ADDONS = mw.pm.addonFolder()
-PATH_THIS_ADDON = os.path.join(PATH_ADDONS, MODULE_ADDON)
-
-
+from .._vendor.packaging import version
+from .._vendor.typing import Optional
 
 def checkVersion(current: str, lower: str, upper: Optional[str]=None) -> bool:
     """Generic version checker
@@ -75,8 +51,7 @@ def checkVersion(current: str, lower: str, upper: Optional[str]=None) -> bool:
     Returns:
         bool -- Whether current version is in specified range
     """
-    from .._vendor.packaging import version
-
+    
     if upper is not None:
         current_parsed = version.parse(current)
         return (current_parsed >= version.parse(lower) and
