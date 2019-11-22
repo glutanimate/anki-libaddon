@@ -30,5 +30,6 @@
 # Any modifications to this file must keep this entire header intact.
 
 """
-Package for custom reusable Qt dialogs (not Anki-specific)
+Packages various reusable components that interact with and extend Anki's
+modules
 """
