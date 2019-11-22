@@ -29,14 +29,30 @@
 #
 # Any modifications to this file must keep this entire header intact.
 
-from .._vendor.typing import Union
+"""
+File system manipulation utilities
+"""
 
-# from .._vendor.typing_extensions import Protocol, runtime
-# from .._vendor.typing import Any, Union
-
-# @runtime
-# class ItemGettable(Protocol):
-#     def __getitem__(self: "ItemGettable", key: Any) -> Any: pass
+import os
+import sys
 
 
-ListOrTuple = Union[list, tuple]
+def ensureExists(path: str) -> str:
+    if not os.path.exists(path):
+        os.makedirs(path)
+    return path
+
+
+def openFile(path: str) -> None:
+    """Open file in default viewer"""
+    import subprocess
+
+    if sys.platform.startswith("win32"):
+        try:
+            os.startfile(path)  # type: ignore
+        except (OSError, UnicodeDecodeError):
+            pass
+    elif sys.platform.startswith("darwin"):
+        subprocess.call(('open', path))
+    else:
+        subprocess.call(("xdg-open", path))

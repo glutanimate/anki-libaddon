@@ -30,23 +30,56 @@
 # Any modifications to this file must keep this entire header intact.
 
 """
-Utility functions for interacting with Anki
+Provides information on Anki version and platform
 """
+
+import os
 
 from aqt import mw
 
-from ..consts import ADDON
+
+from ._vendor.typing import Optional
+
+from .utils import ensureExists
 
 
-def debugInfo() -> str:
-    """Return verbose info on add-ons and Anki installation"""
-    info = ["{name} version {version}".format(name=ADDON.NAME,
-                                              version=ADDON.VERSION)]
-    from aqt.utils import supportText
-    info.append(supportText())
+def pathUserFiles() -> str:
+    user_files = os.path.join(PATH_THIS_ADDON, "user_files")
+    return ensureExists(user_files)
 
-    addmgr = mw.addonManager
-    info.append("Add-ons:\n\n" + "\n".join(
-        addmgr.annotatedName(d) for d in addmgr.allAddons()))
 
-    return "\n\n".join(info)
+_name_components = __name__.split(".")
+
+MODULE_ADDON = _name_components[0]
+MODULE_LIBADDON = _name_components[1]
+
+
+
+PATH_ADDONS = mw.pm.addonFolder()
+PATH_THIS_ADDON = os.path.join(PATH_ADDONS, MODULE_ADDON)
+
+
+
+def checkVersion(current: str, lower: str, upper: Optional[str]=None) -> bool:
+    """Generic version checker
+
+    Checks whether specified version is in specified range
+
+    Arguments:
+        current {str} -- current version
+        lower {str} -- minimum version (inclusive)
+
+    Keyword Arguments:
+        upper {str} -- maximum version (exclusive) (default: {None})
+
+    Returns:
+        bool -- Whether current version is in specified range
+    """
+    from .._vendor.packaging import version
+
+    if upper is not None:
+        current_parsed = version.parse(current)
+        return (current_parsed >= version.parse(lower) and
+                current_parsed < version.parse(upper))
+
+    return version.parse(current) >= version.parse(lower)

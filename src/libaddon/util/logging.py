@@ -38,21 +38,23 @@ import sys
 from datetime import datetime
 
 # need to vendorize 'logging' as Anki's 'logging' does not contain handlers
-from ._vendor import logging
-from ._vendor.logging import handlers
-from ._vendor.typing import Union
+from .._vendor import logging
+from .._vendor.logging import handlers
+from .._vendor.typing import Union
 
-from .consts import ADDON
-from .anki.utils import debugInfo
-from .platform import PATH_THIS_ADDON
+from ..addon import ADDON
+from ..addon.debug import debugInfo
 
 __all__ = [
     "logger", "enableDebugging", "disableDebugging", "maybeStartDebugging",
     "startDebugging", "PATH_LOG"
 ]
 
+# FIXME: REFACTOR! move anki-/addon-specific code to addon.debug
+# e.g.: move into custom logger class (paths supplied as args), instantiate
+# as singleton
 
-PATH_LOG = os.path.join(PATH_THIS_ADDON, "log.txt")
+PATH_LOG = os.path.join(ADDON.PATH_ADDON, "log.txt")
 
 logger = logging.getLogger(ADDON.MODULE)
 
@@ -73,7 +75,7 @@ logger.addHandler(_cli_handler)
 
 logger.setLevel(logging.ERROR)
 
-PATH_DEBUG_ENABLER = os.path.join(PATH_THIS_ADDON, "debug")
+PATH_DEBUG_ENABLER = os.path.join(ADDON.PATH_ADDON, "debug")
 
 
 def isDebuggingOn():
@@ -142,7 +144,7 @@ def getLatestLog() -> Union[str, bool]:
 def openLog():
     if not os.path.exists(PATH_LOG):
         return False
-    from .utils import openFile
+    from .filesystem import openFile
     openFile(PATH_LOG)
     return True
 
@@ -151,3 +153,4 @@ def clearLog():
         return False
     with open(PATH_LOG, "w") as f:
         f.write("")
+

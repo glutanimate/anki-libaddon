@@ -30,15 +30,13 @@
 # Any modifications to this file must keep this entire header intact.
 
 """
-Miscellaneuos utilities used around libaddon
+Data structure manipulation
 """
-
-import os
 
 from functools import reduce
 from copy import deepcopy
 
-from ._vendor.typing import Union
+from .._vendor.typing import Union
 
 # Utility functions for operating with nested objects
 
@@ -203,24 +201,3 @@ def deepMergeDicts(original: dict, incoming: dict, new: bool=False) -> dict:
     return result
 
 
-# File system manipulation
-
-def ensureExists(path: str) -> str:
-    if not os.path.exists(path):
-        os.makedirs(path)
-    return path
-
-
-def openFile(path: str) -> None:
-    """Open file in default viewer"""
-    import subprocess
-    from .platform import PLATFORM
-    if PLATFORM == "win":
-        try:
-            os.startfile(path)  # type: ignore
-        except (OSError, UnicodeDecodeError):
-            pass
-    elif PLATFORM == "mac":
-        subprocess.call(('open', path))
-    else:
-        subprocess.call(("xdg-open", path))

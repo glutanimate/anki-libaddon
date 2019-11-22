@@ -32,3 +32,5 @@
 """
 Package for custom reusable Qt dialogs (Anki-specific)
 """
+
+from PyQt5.QtCore import QT_VERSION_STR  # noqa: F401

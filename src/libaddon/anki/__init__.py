@@ -32,3 +32,44 @@
 """
 Code primarily interacting with Anki
 """
+
+from aqt import mw
+
+from anki import version as anki_version
+from anki.utils import isMac, isWin
+
+from .._vendor.typing import Optional
+
+
+class AnkiData:
+
+    __slots__ = ("PLATFORM", "VERSION")
+
+    PLATFORM = "win" if isWin else "mac" if isMac else "lin"
+    VERSION = anki_version
+    JSBRIDGE = "pycmd"
+
+    @property
+    def SCHEDVER(self) -> Optional[int]:
+        if not mw or not mw.col:
+            return None
+        return mw.col.schedVer()
+
+    @property
+    def PATH_ADDONS(self) -> Optional[str]:
+        if not mw or not mw.pm:
+            # profile loading not finished, this should never happen at
+            # add-on run time
+            return None
+        return mw.pm.addonFolder()
+
+    @property
+    def PATH_MEDIA(self) -> Optional[str]:
+        if not mw or not mw.col:
+            # collection not loaded, could happen intermittently during
+            # transitional states like init, sync, or exit
+            return None
+        return mw.col.media.dir()
+
+
+ANKI = AnkiData()

@@ -29,36 +29,58 @@
 #
 # Any modifications to this file must keep this entire header intact.
 
-"""
-Package-wide constants
-"""
+import os
 
-# TODO: refactor
+from .._vendor.typing import NamedTuple
 
-class ADDON:
-    """Class storing general add-on properties
-    Property names need to be all-uppercase with no leading underscores.
-    Should be updated by add-on on initialization.
-    """
-    NAME = ""
-    MODULE = ""
-    REPO = ""
-    ID = ""
-    VERSION = ""
-    LICENSE = ""
-    AUTHORS = ()
-    AUTHOR_MAIL = ""
-    LIBRARIES = ()
-    CONTRIBUTORS = ()
-    SPONSORS = ()
-    MEMBERS_CREDITED = ()
-    MEMBERS_TOP = ()
-    LINKS = {}
-    
-    @classmethod
-    def update(cls, addon_obj: "ADDON") -> None:
-        for key, value in addon_obj.__dict__.items():
-            if key.startswith("__") and key.endswith("__"):
-                # ignore special attributes
-                continue
-            setattr(cls, key, value)
+
+from ..anki import ANKI
+from ..util.filesystem import ensureExists
+
+__all__ = [
+    "__version__",
+    "AddonData",
+    "ADDON"
+]
+
+
+class AddonData(NamedTuple):
+
+    __slots__ = ("_name_components", "MODULE", "LIBADDON", "PATH_ADDON")
+
+    # Set by add-on
+    NAME: str = ""
+    DEFAULT_MODULE: str = ""  # != actual module name in AnkiWeb releases
+    REPO: str = ""
+    ID: str = ""
+    VERSION: str = ""
+    LICENSE: str = ""
+    AUTHORS: tuple = ()
+    AUTHOR_MAIL: str = ""
+    LIBRARIES: tuple = ()
+    CONTRIBUTORS: tuple = ()
+    SPONSORS: tuple = ()
+    MEMBERS_CREDITED: tuple = ()
+    MEMBERS_TOP: tuple = ()
+    LINKS: dict = {}
+
+    # Set by libaddon
+    _name_components = __name__.split(".")
+    MODULE = _name_components[0]
+    LIBADDON = _name_components[-1]
+    PATH_ADDON = os.path.join(ANKI.PATH_ADDONS, MODULE)
+
+    # Lazy-loaded attributes that are used more rarely
+    @property
+    def PATH_USER_FILES(self) -> str:
+        user_files = os.path.join(self.PATH_ADDON, "user_files")
+        return ensureExists(user_files)
+
+
+# add-on properties "singleton"
+ADDON = AddonData("ADDON")
+
+
+def registerAddon(addon: AddonData):
+    global ADDON
+    ADDON = addon

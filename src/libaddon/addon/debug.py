@@ -29,14 +29,19 @@
 #
 # Any modifications to this file must keep this entire header intact.
 
-from .._vendor.typing import Union
-
-# from .._vendor.typing_extensions import Protocol, runtime
-# from .._vendor.typing import Any, Union
-
-# @runtime
-# class ItemGettable(Protocol):
-#     def __getitem__(self: "ItemGettable", key: Any) -> Any: pass
+from aqt import mw
+from . import ADDON
 
 
-ListOrTuple = Union[list, tuple]
+def debugInfo() -> str:
+    """Return verbose info on add-ons and Anki installation"""
+    info = ["{name} version {version}".format(name=ADDON.NAME,
+                                              version=ADDON.VERSION)]
+    from aqt.utils import supportText
+    info.append(supportText())
+
+    addmgr = mw.addonManager
+    info.append("Add-ons:\n\n" + "\n".join(
+        addmgr.annotatedName(d) for d in addmgr.allAddons()))
+
+    return "\n\n".join(info)

@@ -39,8 +39,8 @@ with Anki add-ons
 import sys
 import os
 
-from ._vendor.types import ModuleType
-from ._vendor.typing import Optional
+from .._vendor.types import ModuleType
+from .._vendor.typing import Optional
 
 __all__ = [
     "importAny",
