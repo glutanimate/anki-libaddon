@@ -34,7 +34,10 @@ Simple dialog with support for mapping widget state from/to dictionary
 keys and/or setter/getter methods.
 """
 
-from PyQt5.QtWidgets import QDialogButtonBox
+from PyQt5.QtWidgets import QDialogButtonBox, QWidget
+
+from ..._vendor.types import ModuleType
+from ..._vendor.typing import Optional, Union, Any
 
 from ...utils import getNestedValue, setNestedValue
 
@@ -45,8 +48,11 @@ __all__ = ["MappedDialog"]
 
 class MappedDialog(BasicDialog):
 
-    def __init__(self, mapped_widgets, data, defaults,
-                 form_module=None, parent=None, **kwargs):
+    def __init__(
+        self, mapped_widgets: Union[list, tuple], data: dict, defaults: dict,
+        form_module: Optional[ModuleType]=None, parent: Optional[QWidget]=None,
+        **kwargs
+    ):
         """
         Simple dialog with support for mapping widget state from/to dictionary
         keys and/or setter/getter methods.
@@ -145,7 +151,7 @@ class MappedDialog(BasicDialog):
         > )
         """
         super().__init__(form_module=form_module,
-                                           parent=parent, **kwargs)
+                         parent=parent, **kwargs)
         self._mapped_widgets = mapped_widgets
         self._defaults = defaults
         self._data = data
@@ -153,13 +159,13 @@ class MappedDialog(BasicDialog):
 
     # API
 
-    def setData(self, data):
+    def setData(self, data: dict):
         for widget_name, properties in self._mapped_widgets:
             for key, property_dict in properties:
                 value = self._dataToWidgetVal(data, property_dict)
                 self.interface.set(widget_name, key, value)
 
-    def getData(self):
+    def getData(self) -> dict:
         for widget_name, properties in self._mapped_widgets:
             for key, property_dict in properties:
                 data_path = self._dataPathToList(
@@ -171,12 +177,12 @@ class MappedDialog(BasicDialog):
                                       data_path)
         return self._data
 
-    def restoreData(self):
+    def restoreData(self) -> None:
         self.setData(self._defaults)
 
     # Events
 
-    def _setupEvents(self):
+    def _setupEvents(self) -> None:
         super()._setupEvents()
         if getattr(self.form, "buttonBox", None):
             restore_btn = self.form.buttonBox.button(
@@ -186,7 +192,7 @@ class MappedDialog(BasicDialog):
 
     # Utility functions to translate data into widget state and vice versa
 
-    def _dataPathToList(self, path):
+    def _dataPathToList(self, path: str) -> list:
         if not path:
             return []
         crumbs = path.split("/")
@@ -194,7 +200,9 @@ class MappedDialog(BasicDialog):
                 int(c.strip("-")) * (-1 if c.startswith("-") else 1)
                 for c in crumbs]
 
-    def _dataToWidgetVal(self, data, property_dict):
+    def _dataToWidgetVal(
+        self, data: dict, property_dict: dict
+    ) -> Optional[Any]:
         """
         Get value from config and translate it to valid widget
         value, optionally pre-processing it using defined
@@ -221,7 +229,10 @@ class MappedDialog(BasicDialog):
 
         return widget_val
 
-    def _widgetToDataVal(self, data, property_dict, widget_val, data_path):
+    def _widgetToDataVal(
+        self, data: dict, property_dict: dict, widget_val: Optional[Any],
+        data_path: Union[list, tuple]
+    ):
         """
         Get widget state/value and translate it to valid
         config value, optionally pre-processing it using defined

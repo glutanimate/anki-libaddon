@@ -36,9 +36,10 @@ Provides information on Anki version and platform
 import os
 
 from aqt import mw
-
 from anki import version as anki_version
 from anki.utils import isMac, isWin
+
+from ._vendor.typing import Optional
 
 from .utils import ensureExists
 
@@ -60,22 +61,22 @@ PATH_THIS_ADDON = os.path.join(PATH_ADDONS, MODULE_ADDON)
 JSPY_BRIDGE = "pycmd"
 
 
-def schedVer():
+def schedVer() -> Optional[int]:
     if not mw.col:  # collection not loaded
         return None
     return mw.col.schedVer()
 
 
-def pathUserFiles():
+def pathUserFiles() -> str:
     user_files = os.path.join(PATH_THIS_ADDON, "user_files")
     return ensureExists(user_files)
 
 
-def pathMediaFiles():
+def pathMediaFiles() -> Optional[str]:
     return mw.col.media.dir()
 
 
-def checkAnkiVersion(lower, upper=None):
+def checkAnkiVersion(lower: str, upper: Optional[str]=None) -> bool:
     """Check whether anki version is in specified range
 
     By default the upper boundary is set to infinite
@@ -89,10 +90,10 @@ def checkAnkiVersion(lower, upper=None):
     Returns:
         bool -- Whether anki version is in specified range
     """
-    checkVersion(anki_version, lower, upper=upper)
+    return checkVersion(anki_version, lower, upper=upper)
 
 
-def checkQtVersion(lower, upper=None):
+def checkQtVersion(lower: str, upper: Optional[str]=None) -> bool:
     """Check whether Qt version is in specified range
 
     By default the upper boundary is set to infinite
@@ -107,10 +108,10 @@ def checkQtVersion(lower, upper=None):
         bool -- Whether Qt version is in specified range
     """
     from aqt.qt import QT_VERSION_STR
-    checkVersion(QT_VERSION_STR, lower, upper=upper)
+    return checkVersion(QT_VERSION_STR, lower, upper=upper)
 
 
-def checkVersion(current, lower, upper=None):
+def checkVersion(current: str, lower: str, upper: Optional[str]=None) -> bool:
     """Generic version checker
 
     Checks whether specified version is in specified range

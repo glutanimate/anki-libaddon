@@ -33,7 +33,9 @@
 Simple dialog for viewing HTML
 """
 
-from PyQt5.QtWidgets import QTextBrowser, QVBoxLayout
+from PyQt5.QtWidgets import QTextBrowser, QVBoxLayout, QWidget
+
+from .._vendor.typing import Optional
 
 from ..platform import PLATFORM
 
@@ -42,7 +44,11 @@ from .basic.dialog_basic import BasicDialog
 
 class HTMLViewer(BasicDialog):
 
-    def __init__(self, html, title=None, parent=None):
+    def __init__(
+        self, html: str,
+        title: Optional[str]=None,
+        parent: Optional[QWidget]=None
+    ):
         super().__init__(parent=parent)
         if PLATFORM == "win":
             self.setMinimumWidth(400)
@@ -54,12 +60,12 @@ class HTMLViewer(BasicDialog):
             self.setWindowTitle(title)
         self.setHtml(html)
 
-    def _setupUI(self):
+    def _setupUI(self) -> None:
         layout = QVBoxLayout(self)
         self.setLayout(layout)
         self._browser = QTextBrowser(self)
         self._browser.setOpenExternalLinks(True)
         layout.addWidget(self._browser)
 
-    def setHtml(self, html):
+    def setHtml(self, html: str) -> None:
         self._browser.setHtml(html)

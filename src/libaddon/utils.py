@@ -38,20 +38,22 @@ import os
 from functools import reduce
 from copy import deepcopy
 
+from ._vendor.typing import Union
+
 # Utility functions for operating with nested objects
 
 
-def getNestedValue(obj, keys):
+def getNestedValue(obj, keys: Union[list, tuple]):
     """
     Get value out of nested collection by supplying tuple of
     nested keys/indices
 
     Arguments:
-        obj {list/dict} -- Nested collection
-        keys {tuple} -- Key/index path leading to config val
+        obj {Collection} -- Nested collection
+        keys {list/tuple} -- Key/index path leading to config val
 
     Returns:
-        object -- Config value
+        Any -- Config value
     """
     cur = obj
     for nr, key in enumerate(keys):
@@ -59,15 +61,15 @@ def getNestedValue(obj, keys):
     return cur
 
 
-def setNestedValue(obj, keys, value):
+def setNestedValue(obj, keys: Union[list, tuple], value) -> None:
     """
-    Set value in nested collection by supplying tuple of
+    Set value in nested collection by supplying Sequence of
     nested keys / indices, and value to set
 
     Arguments:
-        obj {list/dict} -- Nested collection
-        keys {tuple} -- Tuple of keys/indices
-        value {object} -- Key/index path leading to config val
+        obj {Collection} -- Nested collection
+        keys {list/tuple} -- Key/index path leading to config val
+        value {Any} -- value
     """
     depth = len(keys) - 1
     cur = obj
@@ -78,7 +80,7 @@ def setNestedValue(obj, keys, value):
         cur = cur[key]
 
 
-def getNestedAttribute(obj, attr, *args):
+def getNestedAttribute(obj, attr: str, *args):
     """
     Gets nested attribute from "."-separated string
 
@@ -89,7 +91,7 @@ def getNestedAttribute(obj, attr, *args):
                          of nesting
 
     Returns:
-        object -- object corresponding to attribute name
+        Any -- object corresponding to attribute name
 
     Credits:
         https://gist.github.com/wonderbeyond/d293e7a2af1de4873f2d757edd580288
@@ -99,7 +101,7 @@ def getNestedAttribute(obj, attr, *args):
     return reduce(_getattr, [obj] + attr.split('.'))
 
 
-def deepMergeLists(original, incoming, new=False):
+def deepMergeLists(original: list, incoming: list, new: bool=False) -> list:
     """
     Deep merge two lists. Optionally leaves original intact.
 
@@ -144,7 +146,7 @@ def deepMergeLists(original, incoming, new=False):
     return result
 
 
-def deepMergeDicts(original, incoming, new=False):
+def deepMergeDicts(original: dict, incoming: dict, new: bool=False) -> dict:
     """
     Deep merge two dictionaries. Optionally leaves original intact.
 
@@ -165,8 +167,8 @@ def deepMergeDicts(original, incoming, new=False):
         - existing values whose data types have changed (e.g. list → dict)
 
     Arguments:
-        original {list} -- original dictionary
-        incoming {list} -- dictionary with updated values
+        original {dict} -- original dictionary
+        incoming {dict} -- dictionary with updated values
         new {bool} -- whether or not to create a new dictionary instead of
                       updating original
 
@@ -203,19 +205,19 @@ def deepMergeDicts(original, incoming, new=False):
 
 # File system manipulation
 
-def ensureExists(path):
+def ensureExists(path: str) -> str:
     if not os.path.exists(path):
         os.makedirs(path)
     return path
 
 
-def openFile(path):
+def openFile(path: str) -> None:
     """Open file in default viewer"""
     import subprocess
     from .platform import PLATFORM
     if PLATFORM == "win":
         try:
-            os.startfile(path)
+            os.startfile(path)  # type: ignore
         except (OSError, UnicodeDecodeError):
             pass
     elif PLATFORM == "mac":

@@ -33,8 +33,9 @@
 Utilities to fill out predefined data in dialog text labels
 """
 
-from PyQt5.QtWidgets import QLabel, QPushButton
+from PyQt5.QtWidgets import QLabel, QPushButton, QWidget
 from PyQt5.QtCore import QRegExp, Qt
+
 
 from ..consts import ADDON
 
@@ -43,8 +44,8 @@ format_dict = {
     "ADDON_VERSION": ADDON.VERSION,
 }
 
-
-def formatLabels(dialog, linkhandler=None):
+# TODO: add custom callable type annotation for linkhandler
+def formatLabels(dialog: QWidget, linkhandler=None):
     for widget in dialog.findChildren((QLabel, QPushButton), QRegExp(".*"),
                                       Qt.FindChildrenRecursively):
         if widget.objectName().startswith("fmt"):

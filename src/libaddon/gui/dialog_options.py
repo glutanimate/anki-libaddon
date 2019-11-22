@@ -33,15 +33,20 @@
 Main options dialog
 """
 
-from PyQt5.QtCore import Qt, QUrl
-from PyQt5.QtWidgets import QApplication
+from PyQt5.QtCore import Qt, QUrl, QEvent
+from PyQt5.QtWidgets import QApplication, QWidget
 
 from aqt.utils import openLink, tooltip
+
+from .._vendor.typing import Optional, Union, Any
+from .._vendor.types import ModuleType
+
 
 from ..consts import ADDON
 from ..platform import PLATFORM
 from ..debug import (toggleDebugging, isDebuggingOn,
                      getLatestLog, openLog, clearLog)
+from ..anki.configmanager import ConfigManager
 
 from .basic.dialog_mapped import MappedDialog
 from .about import getAboutString
@@ -50,8 +55,12 @@ from .labelformatter import formatLabels
 
 class OptionsDialog(MappedDialog):
 
-    def __init__(self, mapped_widgets, config, form_module=None,
-                 parent=None, **kwargs):
+    def __init__(
+        self, mapped_widgets: Union[list, tuple],
+        config: ConfigManager,
+        form_module: Optional[ModuleType]=None,
+        parent: Optional[QWidget]=None, **kwargs
+    ):
         """
         Creates an options dialog with the provided Qt form and populates its
         widgets from a ConfigManager config object.
@@ -84,7 +93,7 @@ class OptionsDialog(MappedDialog):
 
     # Static widget setup
 
-    def _setupUI(self):
+    def _setupUI(self) -> None:
         formatLabels(self, self._linkHandler)
         self._setupAbout()
         self._setupLabDebug()
@@ -103,7 +112,7 @@ class OptionsDialog(MappedDialog):
                     continue
                 layout.setContentsMargins(3, 3, 3, 3)
 
-    def _setupAbout(self):
+    def _setupAbout(self) -> None:
         """
         Fill out 'about' widget
         """
@@ -113,7 +122,7 @@ class OptionsDialog(MappedDialog):
             self.form.htmlAbout.setOpenLinks(False)
             self.form.htmlAbout.anchorClicked.connect(self._linkHandler)
 
-    def _setupLabDebug(self):
+    def _setupLabDebug(self) ->None:
         label = getattr(self.form, "labDebug", None)
         if not label:
             return
@@ -125,7 +134,7 @@ class OptionsDialog(MappedDialog):
 
     # Events
 
-    def keyPressEvent(self, evt):
+    def keyPressEvent(self, evt: QEvent) -> None:
         """
         Prevent accidentally closing dialog when editing complex widgets
         by ignoring Return and Escape
@@ -134,7 +143,7 @@ class OptionsDialog(MappedDialog):
             return evt.accept()
         super().keyPressEvent(evt)
 
-    def _setupEvents(self):
+    def _setupEvents(self) -> None:
         super()._setupEvents()
         for name, link in ADDON.LINKS.items():
             btn_widget = getattr(self.form, "btn" + name.capitalize(), None)
@@ -144,7 +153,7 @@ class OptionsDialog(MappedDialog):
 
     # Link actions
 
-    def _linkHandler(self, url):
+    def _linkHandler(self, url: str) -> Optional[Any]:
         """Support for binding custom actions to text links"""
         if isinstance(url, QUrl):
             url = url.toString()
@@ -162,7 +171,7 @@ class OptionsDialog(MappedDialog):
         elif cmd == "changelog":
             self._openChangelog()
 
-    def _toggleDebugging(self):
+    def _toggleDebugging(self) -> None:
         if toggleDebugging():
             msg = "enabled"
         else:
@@ -170,7 +179,7 @@ class OptionsDialog(MappedDialog):
         tooltip("Debugging {msg}".format(msg=msg))
         self._setupLabDebug()
 
-    def _copyDebuglog(self):
+    def _copyDebuglog(self) -> Optional[bool]:
         log = getLatestLog()
         if log is False:
             tooltip("No debug log has been recorded, yet")
@@ -178,19 +187,20 @@ class OptionsDialog(MappedDialog):
         QApplication.clipboard().setText(log)
         tooltip("Copied to clipboard")
 
-    def _openDebuglog(self):
+    def _openDebuglog(self) -> bool:
         ret = openLog()
         if ret is False:
             tooltip("No debug log has been recorded, yet")
             return False
+        return ret
 
-    def _openChangelog(self):
+    def _openChangelog(self) -> None:
         changelog = ADDON.LINKS.get("changelog")
         if not changelog:
             return
         openLink(changelog)
 
-    def _clearDebuglog(self):
+    def _clearDebuglog(self) -> Optional[bool]:
         ret = clearLog()
         if ret is False:
             tooltip("No debug log has been recorded, yet")
@@ -199,7 +209,7 @@ class OptionsDialog(MappedDialog):
 
     # Exit handling
 
-    def _onAccept(self):
+    def _onAccept(self) -> None:
         """Executed only if dialog confirmed"""
         self.getData()  # updates self.config in place
         self.config.save()

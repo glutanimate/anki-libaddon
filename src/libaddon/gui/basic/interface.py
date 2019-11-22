@@ -50,7 +50,9 @@ from PyQt5.QtWidgets import (QCheckBox, QComboBox, QDateEdit, QDoubleSpinBox,
                              QFontComboBox, QLabel, QLineEdit,
                              QListWidget, QListWidgetItem, QPlainTextEdit,
                              QPushButton, QRadioButton, QSlider, QSpinBox,
-                             QTextEdit)
+                             QTextEdit, QWidget)
+
+from ..._vendor.typing import Union, Optional, Any
 
 from ...utils import getNestedAttribute
 
@@ -225,7 +227,7 @@ class CommonWidgetInterface:
         "max": ("setMaxValue", None),
     }
 
-    def __init__(self, parent):
+    def __init__(self, parent: QWidget):
         self.parent = parent
 
     # API
@@ -237,7 +239,7 @@ class CommonWidgetInterface:
     # property_name -> setter/getter method mappings defined in
     # methods_by_key
 
-    def set(self, widget_name, property_name, data):
+    def set(self, widget_name: str, property_name: str, data: Optional[Any]) -> Any:
         """
         Sets widget data for given widget name, property name, and data
 
@@ -271,7 +273,7 @@ class CommonWidgetInterface:
 
         return setter(widget, data)
 
-    def get(self, widget_name, property_name):
+    def get(self, widget_name: str, property_name: str) -> Any:
         """
         Gets widget data for given widget name and property name
 
@@ -304,7 +306,7 @@ class CommonWidgetInterface:
 
     # Regular interface
 
-    def setValue(self, widget, data):
+    def setValue(self, widget: QWidget, data: Optional[Any]) -> None:
         """
         Sets the current value for the provided widget.
 
@@ -333,13 +335,13 @@ class CommonWidgetInterface:
             widget.setColor(data)
         elif isinstance(widget, QKeyGrabButton):
             assert (isinstance(data, STRINGTYPES)), error_msg
-            widget.setKey(data)
+            widget.setKey(data)  # type: ignore
         elif isinstance(widget, (QCheckBox, QRadioButton)):
             assert isinstance(data, bool), error_msg
-            widget.setChecked(data)
+            widget.setChecked(data)  # type: ignore
         elif isinstance(widget, (QSpinBox, QDoubleSpinBox, QSlider)):
             assert isinstance(data, NUMERICTYPES), error_msg
-            widget.setValue(data)
+            widget.setValue(data)  # type: ignore
         elif isinstance(widget, QComboBox):
             # data should be non-mutable
             assert not issubclass(type(data), MUTABLES), error_msg
@@ -348,7 +350,7 @@ class CommonWidgetInterface:
             try:
                 self._checkItemTuples(data)
             except AssertionError as error:
-                error.args.append(error_msg)
+                list(error.args).append(error_msg)
                 raise
             self._addListValues(widget, data, clear=True)
         elif isinstance(widget, QDateEdit):
@@ -356,21 +358,21 @@ class CommonWidgetInterface:
             self._setDateTime(widget, data)
         elif isinstance(widget, (QLineEdit, QLabel, QPushButton)):
             assert (isinstance(data, STRINGTYPES)), error_msg
-            widget.setText(data)
+            widget.setText(data)  # type: ignore
         elif isinstance(widget, QTextEdit):
             assert (isinstance(data, STRINGTYPES)), error_msg
-            widget.setHtml(data)
+            widget.setHtml(data)  # type: ignore
         elif isinstance(widget, QPlainTextEdit):
             assert (isinstance(data, STRINGTYPES)), error_msg
-            widget.setPlainText(data)
+            widget.setPlainText(data)  # type: ignore
         elif isinstance(widget, QFontComboBox):
             assert isinstance(data, dict)
-            self._setFontComboCurrent(data)
+            self._setFontComboCurrent(widget, data)
         else:
             raise NotImplementedError(
                 "setValue not implemented for widget ", widget)
 
-    def getValue(self, widget):
+    def getValue(self, widget: QWidget) -> Optional[Any]:
         """
         Gets the current value for the provided widget.
 
@@ -394,11 +396,11 @@ class CommonWidgetInterface:
         if isinstance(widget, QColorButton):
             return widget.color()
         elif isinstance(widget, QKeyGrabButton):
-            return widget.key()
+            return widget.key()  # type: ignore
         elif isinstance(widget, (QCheckBox, QRadioButton)):
-            return widget.isChecked()
+            return widget.isChecked()  # type: ignore
         elif isinstance(widget, (QSpinBox, QDoubleSpinBox, QSlider)):
-            return widget.value()
+            return widget.value()  # type: ignore
         elif isinstance(widget, QComboBox):
             return self._getComboCurrentData(widget)
         elif isinstance(widget, QListWidget):
@@ -406,11 +408,11 @@ class CommonWidgetInterface:
         elif isinstance(widget, QDateEdit):
             return self._getDateTime(widget)
         elif isinstance(widget, (QLineEdit, QLabel, QPushButton)):
-            return widget.text()
+            return widget.text()  # type: ignore
         elif isinstance(widget, QTextEdit):
-            return widget.toHtml()
+            return widget.toHtml()  # type: ignore
         elif isinstance(widget, QPlainTextEdit):
-            return widget.toPlainText()
+            return widget.toPlainText()  # type: ignore
         elif isinstance(widget, QFontComboBox):
             return self._getFontComboCurrent(widget)
         else:
@@ -421,7 +423,10 @@ class CommonWidgetInterface:
 
     # setter
 
-    def setValueList(self, widget, values, current=None, clear=True):
+    def setValueList(
+        self, widget: QWidget, values: Union[list, tuple],
+        current: Any=None, clear: bool=True
+    ) -> None:
         """
         Sets the items of multi-item widgets based on a list of
         provided values.
@@ -471,7 +476,9 @@ class CommonWidgetInterface:
             raise NotImplementedError(
                 "setValues not implemented for widget ", widget)
 
-    def setValueListAndCurrent(self, widget, values, current):
+    def setValueListAndCurrent(
+        self, widget: QWidget, values: Union[list, tuple], current: Any
+    ) -> None:
         """
         Convenience method to set a series of widget items and select
         a specific item to be the current item.
@@ -482,7 +489,7 @@ class CommonWidgetInterface:
         """
         return self.setValueList(widget, values, current=current)
 
-    def addValues(self, widget, values):
+    def addValues(self, widget: QWidget, values: Union[list, tuple]) -> None:
         """
         Convenience method to add a series of widget items without
         removing the existing ones.
@@ -493,7 +500,7 @@ class CommonWidgetInterface:
         """
         return self.setValueList(widget, values, clear=False)
 
-    def addValueAndMakeCurrent(self, widget, value):
+    def addValueAndMakeCurrent(self, widget: QWidget, value: Union[list, tuple]):
         """
         Convenience method to add a widget item and make it the current one.
 
@@ -504,7 +511,7 @@ class CommonWidgetInterface:
         return self.setValueList(widget, [value], current=value[1],
                                  clear=False)
 
-    def removeItemsByData(self, widget, data_to_remove):
+    def removeItemsByData(self, widget: QWidget, data_to_remove: Union[list, tuple]):
         """
         Removes items from a widget by the provided sequence of data values
 
@@ -534,7 +541,7 @@ class CommonWidgetInterface:
             raise NotImplementedError(
                 "removeValues not implemented for widget ", widget)
 
-    def removeSelected(self, widget):
+    def removeSelected(self, widget: QWidget) -> None:
         """
         Removes currently selected item(s) of a widget
 
@@ -553,7 +560,7 @@ class CommonWidgetInterface:
             raise NotImplementedError(
                 "removeSelectedValues not implemented for widget ", widget)
 
-    def setCurrentByData(self, widget, data_current):
+    def setCurrentByData(self, widget: QWidget, data_current: Optional[Any]) -> Optional[bool]:
         """
         Set the current widget item by the provided widget data
 
@@ -583,7 +590,7 @@ class CommonWidgetInterface:
 
     # getter
 
-    def getValueList(self, widget):
+    def getValueList(self, widget: QWidget):
         """
         Get list of current widget values
 
@@ -965,7 +972,7 @@ class CommonWidgetInterface:
         # takeItem does not delete the QListWidgetItem:
         del(item)
 
-    def _setListCurrentByData(self, list_widget, item_data):
+    def _setListCurrentByData(self, list_widget: QWidget, item_data: Any):
         """
         Set current item by item_dta
         """

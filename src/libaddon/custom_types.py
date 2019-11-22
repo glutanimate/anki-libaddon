@@ -29,34 +29,9 @@
 #
 # Any modifications to this file must keep this entire header intact.
 
-"""
-Package-wide constants
-"""
+from ._vendor.typing_extensions import Protocol, runtime
+from ._vendor.typing import Any
 
-class ADDON:
-    """Class storing general add-on properties
-    Property names need to be all-uppercase with no leading underscores.
-    Should be updated by add-on on initialization.
-    """
-    NAME = ""
-    MODULE = ""
-    REPO = ""
-    ID = ""
-    VERSION = ""
-    LICENSE = ""
-    AUTHORS = ()
-    AUTHOR_MAIL = ""
-    LIBRARIES = ()
-    CONTRIBUTORS = ()
-    SPONSORS = ()
-    MEMBERS_CREDITED = ()
-    MEMBERS_TOP = ()
-    LINKS = {}
-    
-    @classmethod
-    def update(cls, addon_obj: "ADDON") -> None:
-        for key, value in addon_obj.__dict__.items():
-            if key.startswith("__") and key.endswith("__"):
-                # ignore special attributes
-                continue
-            setattr(cls, key, value)
+@runtime
+class ItemGettable(Protocol):
+    def __getitem__(self: "ItemGettable", key: Any) -> Any: pass

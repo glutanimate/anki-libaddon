@@ -108,7 +108,7 @@ title_template = """\
 """
 
 
-def getAboutString(title=False, showDebug=False):
+def getAboutString(title: bool=False, showDebug: bool=False) -> str:
     authors_string = "\n".join(authors_template.format(**dct)
                                for dct in ADDON.AUTHORS)
     libs_entries = "\n".join(libs_item_template.format(**dct)

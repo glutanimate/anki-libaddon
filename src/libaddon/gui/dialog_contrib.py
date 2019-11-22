@@ -37,6 +37,8 @@ Uses the following addon-level constants, if defined:
 ADDON.NAME, ADDON.AUTHOR_MAIL, ADDON.LINKS
 """
 
+from PyQt5.QtWidgets import QWidget
+
 from aqt.utils import openLink
 
 from ..consts import ADDON
@@ -47,6 +49,8 @@ from .labelformatter import formatLabels
 from .dialog_htmlview import HTMLViewer
 from .about import getAboutString
 
+from ...libaddon._vendor.types import ModuleType
+
 
 class ContribDialog(BasicDialog):
     """
@@ -54,7 +58,7 @@ class ContribDialog(BasicDialog):
     of options to support the development of the add-on.
     """
 
-    def __init__(self, form_module, parent=None):
+    def __init__(self, form_module: ModuleType, parent: QWidget=None):
         """
         Initialize contrib dialog with provided form
 
@@ -68,13 +72,13 @@ class ContribDialog(BasicDialog):
             parent {QWidget} -- Parent Qt widget (default: {None})
         """
 
-        super(ContribDialog, self).__init__(form_module=form_module,
-                                            parent=parent)
+        super().__init__(form_module=form_module,
+                         parent=parent)
 
-    def _setupUI(self):
+    def _setupUI(self) -> None:
         formatLabels(self, self._linkHandler)
 
-    def _setupEvents(self):
+    def _setupEvents(self) -> None:
         """
         Connect button presses to actions
         """
@@ -88,12 +92,12 @@ class ContribDialog(BasicDialog):
         self.form.btnCredits.clicked.connect(
             self._showCredits)
 
-    def _showCredits(self):
+    def _showCredits(self) -> None:
         viewer = HTMLViewer(getAboutString(title=True),
                             title=ADDON.NAME, parent=self)
         viewer.exec_()
 
-    def _linkHandler(self, url):
+    def _linkHandler(self, url: str) -> None:
         """Support for binding custom actions to text links"""
         if not url.startswith("action://"):
             return openLink(url)

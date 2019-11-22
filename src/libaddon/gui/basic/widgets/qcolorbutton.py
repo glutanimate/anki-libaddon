@@ -33,19 +33,20 @@
 Custom color-chooser
 """
 
+from ...._vendor.typing import Optional
 from PyQt5.QtCore import QSize
 from PyQt5.QtGui import QColor, QIcon, QPixmap
-from PyQt5.QtWidgets import QColorDialog, QPushButton
+from PyQt5.QtWidgets import QColorDialog, QPushButton, QWidget
 
 
 class QColorButton(QPushButton):
-    def __init__(self, parent=None, color="#000000"):
+    def __init__(self, parent: Optional[QWidget]=None, color: str="#000000"):
         super().__init__(parent=parent)
         self._updateButtonColor(color)
         self.clicked.connect(self._chooseColor)
 
-    def _chooseColor(self):
-        qcolour = QColor(self.color)
+    def _chooseColor(self) -> Optional[bool]:
+        qcolour = QColor(self._color)
         dialog = QColorDialog(qcolour, parent=self)
         color = dialog.getColor()
         if not color.isValid():
@@ -53,7 +54,7 @@ class QColorButton(QPushButton):
         color = color.name()
         self._updateButtonColor(color)
 
-    def _updateButtonColor(self, color):
+    def _updateButtonColor(self, color: str):
         """Generate color preview pixmap and place it on button"""
         pixmap = QPixmap(128, 18)
         qcolour = QColor(0, 0, 0)
@@ -61,10 +62,10 @@ class QColorButton(QPushButton):
         pixmap.fill(qcolour)
         self.setIcon(QIcon(pixmap))
         self.setIconSize(QSize(128, 18))
-        self.color = color
+        self._color = color
 
-    def color(self):
-        return self.color
+    def color(self) -> str:
+        return self._color
 
-    def setColor(self, color):
+    def setColor(self, color: str) -> None:
         self._updateButtonColor(color)

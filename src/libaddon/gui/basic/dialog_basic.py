@@ -33,18 +33,24 @@
 Basic QDialog, extended with some quality-of-life improvements
 """
 
-from PyQt5.QtWidgets import QDialog
+from PyQt5.QtWidgets import QDialog, QWidget
 
 from .interface import CommonWidgetInterface
+
+from ..._vendor.types import ModuleType
+from ..._vendor.typing import Optional
 
 __all__ = ["BasicDialog"]
 
 
 class BasicDialog(QDialog):
 
-    def __init__(self, form_module=None, parent=None, **kwargs):
+    def __init__(
+        self, form_module: Optional[ModuleType]=None,
+        parent: Optional[QWidget]=None, **kwargs
+    ):
         super().__init__(parent=parent, **kwargs)
-        self.parent = parent
+        self.parent = parent  # type: ignore FIXME: don't overwrite
         self.interface = CommonWidgetInterface(self)
         # Set up UI from pre-generated UI form:
         if form_module:
@@ -56,42 +62,42 @@ class BasicDialog(QDialog):
 
     # WIDGET SET-UP
 
-    def _setupUI(self):
+    def _setupUI(self) -> None:
         """
         Set up any type of subsequent UI modifications
         (e.g. adding custom widgets on top of form)
         """
         pass
 
-    def _setupEvents(self):
+    def _setupEvents(self) -> None:
         """Set up any type of event bindings"""
         pass
 
-    def _setupShortcuts(self):
+    def _setupShortcuts(self) -> None:
         """Set up any type of keyboard shortcuts"""
         pass
 
     # DIALOG OPEN/CLOSE
 
-    def _onClose(self):
+    def _onClose(self) -> None:
         """Executed whenever dialog closed"""
         pass
 
-    def _onAccept(self):
+    def _onAccept(self) -> None:
         """Executed only if dialog confirmed"""
         pass
 
-    def _onReject(self):
+    def _onReject(self) -> None:
         """Executed only if dialog dismissed"""
         pass
 
-    def accept(self):
+    def accept(self) -> None:
         """Overwrites default accept() to control close actions"""
         self._onClose()
         self._onAccept()
         super().accept()
 
-    def reject(self):
+    def reject(self) -> None:
         """Overwrites default reject() to control close actions"""
         self._onClose()
         self._onReject()

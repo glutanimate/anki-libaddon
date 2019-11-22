@@ -40,6 +40,7 @@ from datetime import datetime
 # need to vendorize 'logging' as Anki's 'logging' does not contain handlers
 from ._vendor import logging
 from ._vendor.logging import handlers
+from ._vendor.typing import Union
 
 from .consts import ADDON
 from .anki.utils import debugInfo
@@ -130,7 +131,7 @@ def stopDebugging():
     logger.setLevel(logging.ERROR)
 
 
-def getLatestLog():
+def getLatestLog() -> Union[str, bool]:
     if not os.path.exists(PATH_LOG):
         return False
     with open(PATH_LOG, "r") as f:
@@ -143,6 +144,7 @@ def openLog():
         return False
     from .utils import openFile
     openFile(PATH_LOG)
+    return True
 
 def clearLog():
     if not os.path.exists(PATH_LOG):

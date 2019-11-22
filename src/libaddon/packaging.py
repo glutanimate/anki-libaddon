@@ -39,6 +39,9 @@ with Anki add-ons
 import sys
 import os
 
+from ._vendor.types import ModuleType
+from ._vendor.typing import Optional
+
 __all__ = [
     "importAny",
     "addPathToModuleLookup"
@@ -47,16 +50,17 @@ __all__ = [
 # Third-party add-on imports
 ######################################################################
 
-def importAny(*modules: str):
+
+def importAny(*modules: str) -> Optional[ModuleType]:
     """
     Import by name, providing multiple alternative names
 
     Common use case: Support all the different package names found
     between 2.0 add-ons, 2.1 AnkiWeb releases, and 2.1 dev releases
-    
+
     Raises:
         ImportError -- Module not found
-    
+
     Returns:
         module -- Imported python module
     """
@@ -66,7 +70,6 @@ def importAny(*modules: str):
         except ImportError:
             pass
     raise ImportError("Requires one of " + ', '.join(modules))
-
 
 
 # Registering external libraries & modules
@@ -89,10 +92,10 @@ def importAny(*modules: str):
 # (e.g. third-party packages depending on stdlib modules missing
 # in Anki's Python distribution).
 
-def addPathToModuleLookup(path: str):
+def addPathToModuleLookup(path: str) -> None:
     """
     Add modules shipped with the add-on to Python module search path
-    
+
     Arguments:
         path {str,unicode} -- Fully qualified path to module directory
     """

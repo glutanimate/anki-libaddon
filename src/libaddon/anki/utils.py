@@ -38,7 +38,7 @@ from aqt import mw
 from ..consts import ADDON
 
 
-def debugInfo():
+def debugInfo() -> str:
     """Return verbose info on add-ons and Anki installation"""
     info = ["{name} version {version}".format(name=ADDON.NAME,
                                               version=ADDON.VERSION)]
