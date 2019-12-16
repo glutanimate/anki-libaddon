@@ -1,5 +1,6 @@
 # NOTE: This module has been modified to be packaged with Anki add-ons
 # The changes are Copyright (c) 2019 Aristotelis P. <https//glutanimate.com/>
+# and licensed under the same license as the original module
 
 import abc
 from abc import abstractmethod, abstractproperty
