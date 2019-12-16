@@ -30,7 +30,7 @@
 # Any modifications to this file must keep this entire header intact.
 
 """
-Provides information on Anki version and platform
+Utilities for semantic version comparisons
 """
 
 from .._vendor.packaging import version

@@ -153,4 +153,3 @@ def clearLog():
         return False
     with open(PATH_LOG, "w") as f:
         f.write("")
-

@@ -44,4 +44,4 @@ def showInfo(message, parent=None, mode="info", title="Anki"):
     elif mode == "critical":
         icon = QMessageBox.Critical
 
-    return QMessageBox(icon, title, message, parent=parent)
+    return QMessageBox(icon, title, message, parent=parent)  # type: ignore
