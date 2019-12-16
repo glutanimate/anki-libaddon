@@ -13,6 +13,9 @@
 # ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER
 # IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT
 # OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+# NOTE: This module has been modified to be packaged with Anki add-ons
+# The changes are Copyright (c) 2019 Aristotelis P. <https//glutanimate.com/>
+
 
 """
 Configuration functions for the logging package for Python. The core package
@@ -26,8 +29,8 @@ To use, simply 'import logging' and log away!
 
 import errno
 import io
-import logging
-import logging.handlers
+from .. import logging
+from .. import logging; from ..logging import handlers as ___vendorize__0; logging.handlers = ___vendorize__0
 import re
 import struct
 import sys

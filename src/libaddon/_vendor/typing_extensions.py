@@ -1,6 +1,6 @@
-# typing-extensions==3.7.4.1
-# manually vendorized for anki-libaddon
-# modifications are (C) 2019 Aristotelis P. <https//glutanimate.com/>
+# NOTE: This module has been modified to be packaged with Anki add-ons
+# The changes are Copyright (c) 2019 Aristotelis P. <https//glutanimate.com/>
+
 import abc
 import collections
 import contextlib
@@ -174,7 +174,7 @@ elif hasattr(typing, '_FinalTypingBase'):
         """Special type indicating functions that never return.
         Example::
 
-          from .typing import NoReturn
+          from typing import NoReturn
 
           def stop() -> NoReturn:
               raise Exception('no way')
@@ -207,7 +207,7 @@ else:
         """Special type indicating functions that never return.
         Example::
 
-          from .typing import NoReturn
+          from typing import NoReturn
 
           def stop() -> NoReturn:
               raise Exception('no way')
