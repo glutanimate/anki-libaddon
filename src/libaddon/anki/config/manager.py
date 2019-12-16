@@ -33,18 +33,13 @@
 Add-on configuration management
 """
 
-import os
-
 from anki.hooks import addHook, runHook
 
-from .._vendor.packaging import version
+from ..._vendor.packaging import version
 
-from ..utils import deepMergeDicts
-from ..platform import PATH_THIS_ADDON, MODULE_ADDON
+from ...util.structures import deepMergeDicts
 
-DEFAULT_LOCAL_CONFIG_PATH = os.path.join(PATH_THIS_ADDON, "config.json")
-DEFAULT_LOCAL_META_PATH = os.path.join(PATH_THIS_ADDON, "meta.json")
-
+from ...addon import ADDON
 
 class ConfigError(Exception):
     """
@@ -76,7 +71,7 @@ class ConfigManager:
     _supported_storages = ("local", "synced", "profile")
 
     def __init__(self, mw, config_dict={"local": None},
-                 conf_key=MODULE_ADDON, conf_action=None,
+                 conf_key=ADDON.MODULE, conf_action=None,
                  reset_req=False, preload=False):
         """
         Initialize a new config manager object with the provided storages
@@ -102,7 +97,7 @@ class ConfigManager:
                 Dictionary key to use when saving storage types that use Anki's
                 databases. Set to the topmost add-on module name by default.
                 (e.g. "review_heatmap")
-                (default: {MODULE_ADDON})
+                (default: {ADDON.MODULE})
 
             conf_action {function}:
                 Function/method to call when user clicks on configure button
@@ -376,7 +371,7 @@ class ConfigManager:
         if not action:
             return
         self.mw.addonManager.setConfigAction(
-            MODULE_ADDON, action)
+            ADDON.MODULE, action)
 
     def setConfigUpdatedAction(self, action):
         """
@@ -390,7 +385,7 @@ class ConfigManager:
         if not action:
             return
         self.mw.addonManager.setConfigUpdatedAction(
-            MODULE_ADDON, action)
+            ADDON.MODULE, action)
 
     # General helper methods
     ######################################################################
@@ -461,7 +456,7 @@ class ConfigManager:
         Returns:
             dict -- Dictionary of config values
         """
-        return self.mw.addonManager.getConfig(MODULE_ADDON)
+        return self.mw.addonManager.getConfig(ADDON.MODULE)
 
     def _getLocalDefaults(self):
         """
@@ -470,7 +465,7 @@ class ConfigManager:
         Returns:
             dict -- Dictionary of default config values
         """
-        return self.mw.addonManager.addonConfigDefaults(MODULE_ADDON)
+        return self.mw.addonManager.addonConfigDefaults(ADDON.MODULE)
 
     def _saveLocal(self, config):
         """
@@ -479,7 +474,7 @@ class ConfigManager:
         Arguments:
             dict -- Dictionary of local config values
         """
-        self.mw.addonManager.writeConfig(MODULE_ADDON, config)
+        self.mw.addonManager.writeConfig(ADDON.MODULE, config)
 
     def onLocalConfigUpdated(self, new_config):
         self._config["local"] = new_config
