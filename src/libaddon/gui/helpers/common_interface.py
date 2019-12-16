@@ -855,7 +855,7 @@ class CommonWidgetInterface:
         """
         Remove items by list of (item_text, item_data) tuples
         """
-        return self._removeComboItemsByData([item[1] for item in item_tuples])
+        return self._removeComboItemsByData(combo_widget, [item[1] for item in item_tuples])
 
     def _removeComboItemsByData(self, combo_widget, data_to_remove):
         """
@@ -864,7 +864,7 @@ class CommonWidgetInterface:
         for idx in range(combo_widget.count()):
             data = combo_widget.itemData(idx, Qt.UserRole)
             if data in data_to_remove:
-                self._removeComboItemByIndex(idx)
+                self._removeComboItemByIndex(combo_widget, idx)
 
     def _removeComboItemByIndex(self, combo_widget, index):
         """
@@ -952,7 +952,7 @@ class CommonWidgetInterface:
         """
         Remove items by list of (item_text, item_data) tuples
         """
-        return self._removeListItemsByData([item[1] for item in item_tuples])
+        return self._removeListItemsByData(list_widget, [item[1] for item in item_tuples])
 
     def _removeListItemsByData(self, list_widget, data_to_remove):
         """
@@ -1027,7 +1027,7 @@ class CommonWidgetInterface:
         """
         Get item_data of current item
         """
-        return self._getListCurrentValue()[1]
+        return self._getListCurrentValue(list_widget)[1]
 
     # QFontComboBox
 
@@ -1048,12 +1048,12 @@ class CommonWidgetInterface:
         """
         family = font_dict.get("family", None)
         size = font_dict.get("size", None)
-        font = QFont()
-        bold = font.setBold(font_dict["bold"])
+        bold = font_dict.get("bold", None)
         italic = font_dict.get("italic", None)
 
         assert family is not None and isinstance(family, STRINGTYPES), \
             "font family needs to be provided as a string type"
+        
         font = QFont(font_dict["family"])
 
         if size is not None:
