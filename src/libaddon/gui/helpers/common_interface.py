@@ -54,10 +54,10 @@ from PyQt5.QtWidgets import (QCheckBox, QComboBox, QDateEdit, QDoubleSpinBox,
 
 from ..._vendor.typing import Union, Optional, Any
 
-from ...utils import getNestedAttribute
+from ...util.structures import getNestedAttribute
 
-from .widgets.qkeygrabber import QKeyGrabButton
-from .widgets.qcolorbutton import QColorButton
+from ..widgets.qkeygrabber import QKeyGrabButton
+from ..widgets.qcolorbutton import QColorButton
 
 # TODO: Switch to QKeySequenceEdit once Qt4 support dropped
 # TODO: add support for QSlider

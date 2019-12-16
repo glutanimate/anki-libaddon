@@ -39,9 +39,9 @@ from PyQt5.QtWidgets import QDialogButtonBox, QWidget
 from ..._vendor.types import ModuleType
 from ..._vendor.typing import Optional, Union, Any
 
-from ...utils import getNestedValue, setNestedValue
+from ...util.structures import getNestedValue, setNestedValue
 
-from .dialog_basic import BasicDialog
+from .basic import BasicDialog
 
 __all__ = ["MappedDialog"]
 

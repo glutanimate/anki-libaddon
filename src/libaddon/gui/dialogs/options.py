@@ -38,19 +38,20 @@ from PyQt5.QtWidgets import QApplication, QWidget
 
 from aqt.utils import openLink, tooltip
 
-from .._vendor.typing import Optional, Union, Any
-from .._vendor.types import ModuleType
+from ..._vendor.typing import Optional, Union, Any
+from ..._vendor.types import ModuleType
 
+from ...addon import ADDON
+from ...anki import ANKI
+from ...anki.config.manager import ConfigManager
 
-from ..consts import ADDON
-from ..platform import PLATFORM
-from ..debug import (toggleDebugging, isDebuggingOn,
-                     getLatestLog, openLog, clearLog)
-from ..anki.configmanager import ConfigManager
+from ...util.logging import (toggleDebugging, isDebuggingOn,
+                             getLatestLog, openLog, clearLog)
 
-from .basic.dialog_mapped import MappedDialog
-from .about import getAboutString
-from .labelformatter import formatLabels
+from ..content.about import getAboutString
+from ..helpers.label_formatter import formatLabels
+
+from .mapped import MappedDialog
 
 
 class OptionsDialog(MappedDialog):
@@ -98,19 +99,21 @@ class OptionsDialog(MappedDialog):
         self._setupAbout()
         self._setupLabDebug()
 
-        if PLATFORM == "mac":
-            # Decrease tab margins on macOS
-            tab_widget = getattr(self.form, "tabWidget", None)
-            if not tab_widget:
-                return
-            for idx in range(tab_widget.count()):
-                tab = tab_widget.widget(idx)
-                if not tab:
-                    continue
-                layout = tab.layout()
-                if not layout:
-                    continue
-                layout.setContentsMargins(3, 3, 3, 3)
+        if ANKI.PLATFORM != "mac":
+            return
+
+        # Decrease tab margins on macOS
+        tab_widget = getattr(self.form, "tabWidget", None)
+        if not tab_widget:
+            return
+        for idx in range(tab_widget.count()):
+            tab = tab_widget.widget(idx)
+            if not tab:
+                continue
+            layout = tab.layout()
+            if not layout:
+                continue
+            layout.setContentsMargins(3, 3, 3, 3)
 
     def _setupAbout(self) -> None:
         """

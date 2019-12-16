@@ -35,7 +35,7 @@ Basic QDialog, extended with some quality-of-life improvements
 
 from PyQt5.QtWidgets import QDialog, QWidget
 
-from .interface import CommonWidgetInterface
+from ..helpers.common_interface import CommonWidgetInterface
 
 from ..._vendor.types import ModuleType
 from ..._vendor.typing import Optional

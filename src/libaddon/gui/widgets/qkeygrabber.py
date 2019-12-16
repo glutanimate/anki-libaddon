@@ -39,7 +39,7 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QKeySequence
 from PyQt5.QtWidgets import QDialog, QPushButton, QVBoxLayout, QLabel
 
-from ....platform import PLATFORM
+from ...anki import ANKI
 
 
 PLATFORM_MODKEY_NAMES = {
@@ -87,7 +87,7 @@ class QKeyGrab(QDialog):
     (https://github.com/searene/Anki-Addons)
     """
 
-    modkey_names = PLATFORM_MODKEY_NAMES[PLATFORM]
+    modkey_names = PLATFORM_MODKEY_NAMES[ANKI.PLATFORM]
 
     def __init__(self, parent):
         """

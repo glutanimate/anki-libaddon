@@ -34,7 +34,7 @@ Generate 'about' info, including credits, copyright, etc.
 """
 
 
-from ..consts import ADDON
+from ...addon import ADDON
 
 libs_header = (
     "<p>{} ships with the following third-party code:</p>".format(ADDON.NAME))

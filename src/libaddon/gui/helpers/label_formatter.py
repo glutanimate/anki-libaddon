@@ -37,7 +37,7 @@ from PyQt5.QtWidgets import QLabel, QPushButton, QWidget
 from PyQt5.QtCore import QRegExp, Qt
 
 
-from ..consts import ADDON
+from ...addon import ADDON
 
 format_dict = {
     "ADDON_NAME": ADDON.NAME,

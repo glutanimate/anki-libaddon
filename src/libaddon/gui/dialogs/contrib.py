@@ -41,15 +41,14 @@ from PyQt5.QtWidgets import QWidget
 
 from aqt.utils import openLink
 
-from ..consts import ADDON
+from ..._vendor.types import ModuleType
+from ...addon import ADDON
 
-from .basic.dialog_basic import BasicDialog
-from .labelformatter import formatLabels
+from ..helpers.label_formatter import formatLabels
+from ..content.about import getAboutString
 
-from .dialog_htmlview import HTMLViewer
-from .about import getAboutString
-
-from ...libaddon._vendor.types import ModuleType
+from .basic import BasicDialog
+from .htmlview import HTMLViewer
 
 
 class ContribDialog(BasicDialog):

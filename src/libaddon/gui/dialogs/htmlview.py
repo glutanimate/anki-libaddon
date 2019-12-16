@@ -35,11 +35,11 @@ Simple dialog for viewing HTML
 
 from PyQt5.QtWidgets import QTextBrowser, QVBoxLayout, QWidget
 
-from .._vendor.typing import Optional
+from ..._vendor.typing import Optional
 
-from ..platform import PLATFORM
+from ...anki import ANKI
 
-from .basic.dialog_basic import BasicDialog
+from .basic import BasicDialog
 
 
 class HTMLViewer(BasicDialog):
@@ -50,7 +50,7 @@ class HTMLViewer(BasicDialog):
         parent: Optional[QWidget]=None
     ):
         super().__init__(parent=parent)
-        if PLATFORM == "win":
+        if ANKI.PLATFORM == "win":
             self.setMinimumWidth(400)
             self.setMinimumHeight(500)
         else:
