@@ -31,5 +31,5 @@
 
 """
 Packages various reusable components that interact with and extend Anki's
-modules
+default components
 """
