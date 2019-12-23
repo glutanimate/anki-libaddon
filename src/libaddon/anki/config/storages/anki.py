@@ -33,12 +33,16 @@
 Add-on configuration storages
 """
 
+from aqt.main import AnkiQt
 from anki.hooks import addHook
+
+from typing import Any, Optional, Hashable  # FIXME: import from _vendor
 
 from ...._vendor.packaging import version
 from ....util.structures import deepMergeDicts
 
 from ....anki.additions.hooks import HOOKS
+from ....addon import ADDON
 
 from ..errors import ConfigError, ConfigNotReadyError, ConfigFutureError
 
@@ -52,13 +56,16 @@ __all__ = [
     "SyncedConfigStorage"
 ]
 
+
 class AnkiConfigStorage(ConfigStorage):
     """abstract, never initialize directly"""
 
     name = "profile"
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, mw: AnkiQt, namespace: str,
+                 defaults: dict, native_gui: bool=True):
+        self._ensure_defaults_versioned(defaults)
+        super().__init__(mw, namespace, defaults=defaults, native_gui=native_gui)
         self._deferred: bool = False
 
     def initialize(self) -> bool:
@@ -67,15 +74,23 @@ class AnkiConfigStorage(ConfigStorage):
             return False
         return super().initialize()
 
+    def _ensure_defaults_versioned(self, defaults):
+        if not isinstance(defaults, dict) or not defaults.get("version"):
+            raise ConfigError(
+                "Defaults need to include a 'version' key/value pair")
+
     @property
     def _configObject(self) -> dict:
         try:
-            config_object = self.__configObject()
+            config_object = self._actualConfigObject()
         except AttributeError:
+            config_object = None
+        if config_object is None:
             raise ConfigNotReadyError(f"{self.name} storage is not ready")
+        print(config_object)
         return self._getUpdatedConfig(config_object)
 
-    def __configObject(self) -> dict:
+    def _actualConfigObject(self) -> dict:
         raise NotImplementedError
 
     def _getUpdatedConfig(self, config_object: dict) -> dict:
@@ -88,7 +103,7 @@ class AnkiConfigStorage(ConfigStorage):
 
         storage_dict = config_object[conf_key]
         dict_version = str(storage_dict.get("version", "0.0.0"))
-        default_version = str(defaults["version"])
+        default_version = str(defaults.get("version", "0.0.0"))
 
         parsed_version_current = version.parse(dict_version)
         parsed_version_default = version.parse(default_version)
@@ -147,7 +162,7 @@ class ProfileConfigStorage(AnkiConfigStorage):
 
     name = "profile"
 
-    def __configObject(self) -> dict:
+    def _actualConfigObject(self) -> dict:
         return self._mw.pm.profile
 
 
@@ -155,7 +170,7 @@ class MetaConfigStorage(AnkiConfigStorage):
 
     name = "meta"
 
-    def __configObject(self) -> dict:
+    def _actualConfigObject(self) -> dict:
         return self._mw.pm.meta
 
 
@@ -163,8 +178,8 @@ class LibaddonMetaConfigStorage(MetaConfigStorage):
 
     name = "libaddonmeta"
 
-    def __configObject(self) -> dict:
-        config_object = super().__configObject()
+    def _actualConfigObject(self) -> dict:
+        config_object = super()._actualConfigObject()
         if "libaddon" not in config_object:
             config_object["libaddon"] = {}
         return config_object["libaddon"]
@@ -174,5 +189,5 @@ class SyncedConfigStorage(AnkiConfigStorage):
 
     name = "synced"
 
-    def __configObject(self) -> dict:
+    def _actualConfigObject(self) -> dict:
         return self._mw.col.conf

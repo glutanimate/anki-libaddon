@@ -33,7 +33,6 @@
 Add-on configuration storages
 """
 
-from aqt.addons import AddonsDialog
 from anki.hooks import wrap
 
 from ....addon import ADDON
@@ -80,6 +79,8 @@ class LocalConfigStorage(ConfigStorage):
 
     def _ensureSaveBeforeConfigGUILoaded(self) -> None:
         """ugly workaround, drop as soon as possible"""
+        
+        from aqt.addons import AddonsDialog
 
         def wrappedOnConfig(addonsDialog: AddonsDialog, *args, **kwargs):
             """Save before config editor is invoked"""

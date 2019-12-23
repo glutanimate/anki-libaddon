@@ -47,6 +47,7 @@ from ..errors import ConfigNotReadyError
 
 __all__ = ["ConfigStorage"]
 
+
 class ConfigStorage(UserDict, ConfigInterface):
     """abstract, never initialize directly"""
 
@@ -55,7 +56,7 @@ class ConfigStorage(UserDict, ConfigInterface):
     def __init__(self, mw: AnkiQt, namespace: str,
                  defaults: Optional[dict]=None, native_gui: bool=True):
         defaults = defaults or {}
-        super().__init__(defaults)
+        
         self._mw = mw
         self._namespace = namespace
         self._defaults = defaults
@@ -66,6 +67,11 @@ class ConfigStorage(UserDict, ConfigInterface):
         self._dirty: bool = False
 
         self.signals = ConfigSignals()
+        
+        # calls in __setitem__ might not be ready, so set data manually rather
+        # than letting it be set by super().__init__ which uses __setitem__
+        super().__init__()
+        self.data = defaults
 
     def __getitem__(self, key: Hashable) -> Any:
         self._checkReadyAndLoaded()

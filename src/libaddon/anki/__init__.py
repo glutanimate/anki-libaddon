@@ -43,8 +43,6 @@ from .._vendor.typing import Optional
 
 class AnkiData:
 
-    __slots__ = ("PLATFORM", "VERSION")
-
     PLATFORM = "win" if isWin else "mac" if isMac else "lin"
     VERSION = anki_version
     JSBRIDGE = "pycmd"
@@ -60,7 +58,7 @@ class AnkiData:
         if not mw or not mw.pm:
             # profile loading not finished, this should never happen at
             # add-on run time
-            return None
+            raise AttributeError("Profile not loaded")
         return mw.pm.addonFolder()
 
     @property
@@ -70,6 +68,17 @@ class AnkiData:
             # transitional states like init, sync, or exit
             return None
         return mw.col.media.dir()
+
+    def __repr__(self):
+        # TODO: automate
+        return str({
+            "PLATFORM": self.PLATFORM,
+            "VERSION": self.VERSION,
+            "JSBRIDGE": self.JSBRIDGE,
+            "SCHEDVER": self.SCHEDVER,
+            "PATH_ADDONS": self.PATH_ADDONS,
+            "PATH_MEDIA": self.PATH_MEDIA
+        })
 
 
 ANKI = AnkiData()

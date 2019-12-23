@@ -46,8 +46,6 @@ __all__ = [
 
 class AddonData(NamedTuple):
 
-    __slots__ = ("_name_components", "MODULE", "LIBADDON", "PATH_ADDON")
-
     # Set by add-on
     NAME: str = ""
     DEFAULT_MODULE: str = ""  # != actual module name in AnkiWeb releases
@@ -68,6 +66,7 @@ class AddonData(NamedTuple):
     _name_components = __name__.split(".")
     MODULE = _name_components[0]
     LIBADDON = _name_components[-1]
+    print(ANKI.PATH_ADDONS, MODULE)
     PATH_ADDON = os.path.join(ANKI.PATH_ADDONS, MODULE)
 
     # Lazy-loaded attributes that are used more rarely
