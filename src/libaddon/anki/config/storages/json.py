@@ -43,12 +43,13 @@ from ..errors import ConfigError
 
 __all__ = ["JSONConfigStorage"]
 
+
 class JSONConfigStorage(ConfigStorage):
     """e.g. JSON file in user_data folder"""
 
     name = "json"
 
-    def __init__(self, *args, path: str="", **kwargs):
+    def __init__(self, *args, path: str = "", **kwargs):
         super().__init__(*args, **kwargs)
         self._path = path
 
@@ -67,7 +68,8 @@ class JSONConfigStorage(ConfigStorage):
         except (IOError, OSError, ValueError) as e:
             # log
             raise ConfigError(
-                f"Could not read {self.name} storage at {path}:\n{str(e)}")
+                f"Could not read {self.name} storage at {path}:\n{str(e)}"
+            )
 
     def _writeData(self, path: str, data: dict) -> None:
         try:
@@ -76,7 +78,8 @@ class JSONConfigStorage(ConfigStorage):
         except (IOError, OSError, ValueError) as e:
             # log
             raise ConfigError(
-                f"Could not write to {self.name} storage at {path}:\n{str(e)}")
+                f"Could not write to {self.name} storage at {path}:\n{str(e)}"
+            )
 
     def _removeFile(self) -> None:
         path = self._safePath(self._path)
@@ -86,7 +89,7 @@ class JSONConfigStorage(ConfigStorage):
         path = self._safePath(self._path)
         data = self._readData(path)
         super().load()
-        return (data is not None)
+        return data is not None
 
     def save(self) -> None:
         path = self._safePath(self._path)

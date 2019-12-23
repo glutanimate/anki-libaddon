@@ -53,10 +53,15 @@ class ConfigStorage(UserDict, ConfigInterface):
 
     name: str = ""
 
-    def __init__(self, mw: AnkiQt, namespace: str,
-                 defaults: Optional[dict]=None, native_gui: bool=True):
+    def __init__(
+        self,
+        mw: AnkiQt,
+        namespace: str,
+        defaults: Optional[dict] = None,
+        native_gui: bool = True,
+    ):
         defaults = defaults or {}
-        
+
         self._mw = mw
         self._namespace = namespace
         self._defaults = defaults
@@ -67,7 +72,7 @@ class ConfigStorage(UserDict, ConfigInterface):
         self._dirty: bool = False
 
         self.signals = ConfigSignals()
-        
+
         # calls in __setitem__ might not be ready, so set data manually rather
         # than letting it be set by super().__init__ which uses __setitem__
         super().__init__()

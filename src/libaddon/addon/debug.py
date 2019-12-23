@@ -35,13 +35,14 @@ from . import ADDON
 
 def debugInfo() -> str:
     """Return verbose info on add-ons and Anki installation"""
-    info = ["{name} version {version}".format(name=ADDON.NAME,
-                                              version=ADDON.VERSION)]
+    info = ["{name} version {version}".format(name=ADDON.NAME, version=ADDON.VERSION)]
     from aqt.utils import supportText
+
     info.append(supportText())
 
     addmgr = mw.addonManager
-    info.append("Add-ons:\n\n" + "\n".join(
-        addmgr.annotatedName(d) for d in addmgr.allAddons()))
+    info.append(
+        "Add-ons:\n\n" + "\n".join(addmgr.annotatedName(d) for d in addmgr.allAddons())
+    )
 
     return "\n\n".join(info)

@@ -94,12 +94,14 @@ def getNestedAttribute(obj, attr: str, *args):
     Credits:
         https://gist.github.com/wonderbeyond/d293e7a2af1de4873f2d757edd580288
     """
+
     def _getattr(obj, attr):
         return getattr(obj, attr, *args)
-    return reduce(_getattr, [obj] + attr.split('.'))
+
+    return reduce(_getattr, [obj] + attr.split("."))
 
 
-def deepMergeLists(original: list, incoming: list, new: bool=False) -> list:
+def deepMergeLists(original: list, incoming: list, new: bool = False) -> list:
     """
     Deep merge two lists. Optionally leaves original intact.
 
@@ -129,11 +131,9 @@ def deepMergeLists(original: list, incoming: list, new: bool=False) -> list:
 
     common_length = min(len(original), len(incoming))
     for idx in range(common_length):
-        if (isinstance(result[idx], dict) and
-                isinstance(incoming[idx], dict)):
+        if isinstance(result[idx], dict) and isinstance(incoming[idx], dict):
             deepMergeDicts(result[idx], incoming[idx])
-        elif (isinstance(result[idx], list) and
-                isinstance(incoming[idx], list)):
+        elif isinstance(result[idx], list) and isinstance(incoming[idx], list):
             deepMergeLists(result[idx], incoming[idx])
         else:
             result[idx] = incoming[idx]
@@ -144,7 +144,7 @@ def deepMergeLists(original: list, incoming: list, new: bool=False) -> list:
     return result
 
 
-def deepMergeDicts(original: dict, incoming: dict, new: bool=False) -> dict:
+def deepMergeDicts(original: dict, incoming: dict, new: bool = False) -> dict:
     """
     Deep merge two dictionaries. Optionally leaves original intact.
 
@@ -181,14 +181,11 @@ def deepMergeDicts(original: dict, incoming: dict, new: bool=False) -> dict:
 
     for key in incoming:
         if key in result:
-            if (isinstance(result[key], dict) and
-                    isinstance(incoming[key], dict)):
+            if isinstance(result[key], dict) and isinstance(incoming[key], dict):
                 deepMergeDicts(result[key], incoming[key])
-            elif (isinstance(result[key], list) and
-                    isinstance(incoming[key], list)):
+            elif isinstance(result[key], list) and isinstance(incoming[key], list):
                 deepMergeLists(result[key], incoming[key])
-            elif (result[key] is not None and
-                    (type(result[key]) != type(incoming[key]))):
+            elif result[key] is not None and (type(result[key]) != type(incoming[key])):
                 # switched to different data type, original takes precedence
                 # with the exception of None value in original being replaced
                 pass

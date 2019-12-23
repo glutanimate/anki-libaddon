@@ -46,11 +46,24 @@ from collections import MutableSequence, MutableSet, MutableMapping
 
 from PyQt5.QtCore import Qt, QDateTime
 from PyQt5.QtGui import QFont
-from PyQt5.QtWidgets import (QCheckBox, QComboBox, QDateEdit, QDoubleSpinBox,
-                             QFontComboBox, QLabel, QLineEdit,
-                             QListWidget, QListWidgetItem, QPlainTextEdit,
-                             QPushButton, QRadioButton, QSlider, QSpinBox,
-                             QTextEdit, QWidget)
+from PyQt5.QtWidgets import (
+    QCheckBox,
+    QComboBox,
+    QDateEdit,
+    QDoubleSpinBox,
+    QFontComboBox,
+    QLabel,
+    QLineEdit,
+    QListWidget,
+    QListWidgetItem,
+    QPlainTextEdit,
+    QPushButton,
+    QRadioButton,
+    QSlider,
+    QSpinBox,
+    QTextEdit,
+    QWidget,
+)
 
 from ..._vendor.typing import Union, Optional, Any
 
@@ -263,12 +276,13 @@ class CommonWidgetInterface:
         try:
             setter = getattr(self, self.methods_by_key[property_name][0])
         except KeyError as error:
-            error.args += ("Unrecognized widget property name: ",
-                           property_name)
+            error.args += ("Unrecognized widget property name: ", property_name)
             raise
         except TypeError as error:
-            error.args += ("Setter not defined for widget property name: ",
-                           property_name)
+            error.args += (
+                "Setter not defined for widget property name: ",
+                property_name,
+            )
             raise
 
         return setter(widget, data)
@@ -294,12 +308,13 @@ class CommonWidgetInterface:
         try:
             getter = getattr(self, self.methods_by_key[property_name][1])
         except KeyError as error:
-            error.args += ("Unrecognized widget property name: ",
-                           property_name)
+            error.args += ("Unrecognized widget property name: ", property_name)
             raise
         except TypeError as error:  # raised when method name is None
-            error.args += ("Setter not defined for widget property name: ",
-                           property_name)
+            error.args += (
+                "Setter not defined for widget property name: ",
+                property_name,
+            )
             raise
 
         return getter(widget)
@@ -334,7 +349,7 @@ class CommonWidgetInterface:
             assert isinstance(data, STRINGTYPES), error_msg
             widget.setColor(data)
         elif isinstance(widget, QKeyGrabButton):
-            assert (isinstance(data, STRINGTYPES)), error_msg
+            assert isinstance(data, STRINGTYPES), error_msg
             widget.setKey(data)  # type: ignore
         elif isinstance(widget, (QCheckBox, QRadioButton)):
             assert isinstance(data, bool), error_msg
@@ -357,20 +372,19 @@ class CommonWidgetInterface:
             assert isinstance(data, int), error_msg
             self._setDateTime(widget, data)
         elif isinstance(widget, (QLineEdit, QLabel, QPushButton)):
-            assert (isinstance(data, STRINGTYPES)), error_msg
+            assert isinstance(data, STRINGTYPES), error_msg
             widget.setText(data)  # type: ignore
         elif isinstance(widget, QTextEdit):
-            assert (isinstance(data, STRINGTYPES)), error_msg
+            assert isinstance(data, STRINGTYPES), error_msg
             widget.setHtml(data)  # type: ignore
         elif isinstance(widget, QPlainTextEdit):
-            assert (isinstance(data, STRINGTYPES)), error_msg
+            assert isinstance(data, STRINGTYPES), error_msg
             widget.setPlainText(data)  # type: ignore
         elif isinstance(widget, QFontComboBox):
             assert isinstance(data, dict)
             self._setFontComboCurrent(widget, data)
         else:
-            raise NotImplementedError(
-                "setValue not implemented for widget ", widget)
+            raise NotImplementedError("setValue not implemented for widget ", widget)
 
     def getValue(self, widget: QWidget) -> Optional[Any]:
         """
@@ -416,16 +430,18 @@ class CommonWidgetInterface:
         elif isinstance(widget, QFontComboBox):
             return self._getFontComboCurrent(widget)
         else:
-            raise NotImplementedError(
-                "getValue not implemented for widget ", widget)
+            raise NotImplementedError("getValue not implemented for widget ", widget)
 
     # WIDGETS WITH MULTIPLE ITEMS TO CHOOSE FROM:
 
     # setter
 
     def setValueList(
-        self, widget: QWidget, values: Union[list, tuple],
-        current: Any=None, clear: bool=True
+        self,
+        widget: QWidget,
+        values: Union[list, tuple],
+        current: Any = None,
+        clear: bool = True,
     ) -> None:
         """
         Sets the items of multi-item widgets based on a list of
@@ -458,23 +474,24 @@ class CommonWidgetInterface:
         """
         try:
             self._checkItemTuples(values)
-            assert not issubclass(type(current), MUTABLES), \
-                "current data should be an immutable type (e.g. str or int)"
-            assert isinstance(clear, bool), \
-                "clear should be set to a boolean"
+            assert not issubclass(
+                type(current), MUTABLES
+            ), "current data should be an immutable type (e.g. str or int)"
+            assert isinstance(clear, bool), "clear should be set to a boolean"
         except AssertionError as error:
             error.args += ("Widget: ", widget)
             raise
 
         if isinstance(widget, QComboBox):
-            return self._addComboValues(widget, values, current_data=current,
-                                        clear=clear)
+            return self._addComboValues(
+                widget, values, current_data=current, clear=clear
+            )
         elif isinstance(widget, QListWidget):
-            return self._addListValues(widget, values, current_data=current,
-                                       clear=clear)
+            return self._addListValues(
+                widget, values, current_data=current, clear=clear
+            )
         else:
-            raise NotImplementedError(
-                "setValues not implemented for widget ", widget)
+            raise NotImplementedError("setValues not implemented for widget ", widget)
 
     def setValueListAndCurrent(
         self, widget: QWidget, values: Union[list, tuple], current: Any
@@ -508,8 +525,7 @@ class CommonWidgetInterface:
 
         Type checking and error handling delegated to setValueList
         """
-        return self.setValueList(widget, [value], current=value[1],
-                                 clear=False)
+        return self.setValueList(widget, [value], current=value[1], clear=False)
 
     def removeItemsByData(self, widget: QWidget, data_to_remove: Union[list, tuple]):
         """
@@ -527,11 +543,12 @@ class CommonWidgetInterface:
             AssertionError -- In case of illegitimate API calls (e.g. wrong
                               value types, missing dictionary keys, etc.)
         """
-        assert isinstance(data_to_remove, LISTTYPES), \
-            "data_to_remove should be a list or tuple"
-        assert (not data_to_remove or
-                not issubclass(type(data_to_remove[0]), MUTABLES)), \
-            "data_to_remove should contain immutables (e.g. str or int)"
+        assert isinstance(
+            data_to_remove, LISTTYPES
+        ), "data_to_remove should be a list or tuple"
+        assert not data_to_remove or not issubclass(
+            type(data_to_remove[0]), MUTABLES
+        ), "data_to_remove should contain immutables (e.g. str or int)"
 
         if isinstance(widget, QComboBox):
             return self._removeComboItemsByData(widget, data_to_remove)
@@ -539,7 +556,8 @@ class CommonWidgetInterface:
             return self._removeListItemsByData(widget, data_to_remove)
         else:
             raise NotImplementedError(
-                "removeValues not implemented for widget ", widget)
+                "removeValues not implemented for widget ", widget
+            )
 
     def removeSelected(self, widget: QWidget) -> None:
         """
@@ -558,9 +576,12 @@ class CommonWidgetInterface:
                 self._removeListItem(widget, item)
         else:
             raise NotImplementedError(
-                "removeSelectedValues not implemented for widget ", widget)
+                "removeSelectedValues not implemented for widget ", widget
+            )
 
-    def setCurrentByData(self, widget: QWidget, data_current: Optional[Any]) -> Optional[bool]:
+    def setCurrentByData(
+        self, widget: QWidget, data_current: Optional[Any]
+    ) -> Optional[bool]:
         """
         Set the current widget item by the provided widget data
 
@@ -577,16 +598,16 @@ class CommonWidgetInterface:
         Returns:
             bool -- True if item found
         """
-        assert not issubclass(type(data_current), MUTABLES), \
-            "data_current should be an immutable object (e.g. str or int)"
+        assert not issubclass(
+            type(data_current), MUTABLES
+        ), "data_current should be an immutable object (e.g. str or int)"
 
         if isinstance(widget, QListWidget):
             return self._setListCurrentByData(widget, data_current)
         elif isinstance(widget, QComboBox):
             return self._setComboCurrentByData(widget, data_current)
         else:
-            raise NotImplementedError(
-                "setCurrent not implemented for widget ", widget)
+            raise NotImplementedError("setCurrent not implemented for widget ", widget)
 
     # getter
 
@@ -609,8 +630,7 @@ class CommonWidgetInterface:
         elif isinstance(widget, QListWidget):
             return self._getListValues(widget)
         else:
-            raise NotImplementedError(
-                "getValues not implemented for widget ", widget)
+            raise NotImplementedError("getValues not implemented for widget ", widget)
 
     def getCurrentData(self, widget):
         """
@@ -631,8 +651,7 @@ class CommonWidgetInterface:
         elif isinstance(widget, QListWidget):
             return self._getListCurrentData(widget)
         else:
-            raise NotImplementedError(
-                "getCurrent not implemented for widget ", widget)
+            raise NotImplementedError("getCurrent not implemented for widget ", widget)
 
     def getSelected(self, widget):
         """
@@ -651,8 +670,7 @@ class CommonWidgetInterface:
         if isinstance(widget, QListWidget):
             return widget.selectedItems()
         else:
-            raise NotImplementedError(
-                "getSelected not implemented for widget ", widget)
+            raise NotImplementedError("getSelected not implemented for widget ", widget)
 
     # WIDGETS WITH VALUE BOUNDARIES:
 
@@ -675,8 +693,7 @@ class CommonWidgetInterface:
             object -- Setter return value
         """
         try:
-            assert isinstance(value, (int, float)), \
-                "value should be an int or float"
+            assert isinstance(value, (int, float)), "value should be an int or float"
         except AssertionError as error:
             error.args += ("Widget: ", widget)
             raise
@@ -686,8 +703,7 @@ class CommonWidgetInterface:
         elif isinstance(widget, QDateEdit):
             return self._setDateTimeMin(widget, value)
         else:
-            raise NotImplementedError(
-                "setMinValue not implemented for widget ", widget)
+            raise NotImplementedError("setMinValue not implemented for widget ", widget)
 
     def setMaxValue(self, widget, value):
         """
@@ -708,8 +724,7 @@ class CommonWidgetInterface:
             object -- Setter return value
         """
         try:
-            assert isinstance(value, (int, float)), \
-                "value should be an int or float"
+            assert isinstance(value, (int, float)), "value should be an int or float"
         except AssertionError as error:
             error.args += ("Widget: ", widget)
             raise
@@ -719,8 +734,7 @@ class CommonWidgetInterface:
         elif isinstance(widget, QDateEdit):
             return self._setDateTimeMax(widget, value)
         else:
-            raise NotImplementedError(
-                "setMaxValue not implemented for widget ", widget)
+            raise NotImplementedError("setMaxValue not implemented for widget ", widget)
 
     # UTILITY
 
@@ -740,13 +754,11 @@ class CommonWidgetInterface:
         Returns:
             QWidget -- widget corresponding to attribute name
         """
-        assert isinstance(name, STRINGTYPES), \
-            "name should be a string type"
+        assert isinstance(name, STRINGTYPES), "name should be a string type"
         try:
             return getNestedAttribute(self.parent, name)
         except AttributeError:
-            raise NotImplementedError(
-                "Widget not implemented: ", name)
+            raise NotImplementedError("Widget not implemented: ", name)
 
     # PRIVATE
     ######################################################################
@@ -772,15 +784,15 @@ class CommonWidgetInterface:
         Check validity of item tuples
         """
         # values provided as tuples of (str: label, immutable: data)
-        assert isinstance(values, LISTTYPES), \
-            "values should be provided as a list/tuple of tuples"
+        assert isinstance(
+            values, LISTTYPES
+        ), "values should be provided as a list/tuple of tuples"
         # lazy check for first tuple. should catch most type errors:
-        assert(len(values) == 0 or
-               (len(values[0]) == 2 and
-                isinstance(values[0][0], STRINGTYPES) and
-                not issubclass(type(values[0][1]), MUTABLES))
-               ), \
-            "expected tuple types: (str: label, immutable (e.g. str): data"
+        assert len(values) == 0 or (
+            len(values[0]) == 2
+            and isinstance(values[0][0], STRINGTYPES)
+            and not issubclass(type(values[0][1]), MUTABLES)
+        ), "expected tuple types: (str: label, immutable (e.g. str): data"
         return True
 
     # WIDGET-SPECIFIC METHODS
@@ -807,15 +819,13 @@ class CommonWidgetInterface:
         """
         Update min date & time of QDateTimeEdit from unix time in secs
         """
-        return qdatetimeedit.setMinimumDateTime(
-            self._createDateTimeFromUnix(mintime))
+        return qdatetimeedit.setMinimumDateTime(self._createDateTimeFromUnix(mintime))
 
     def _setDateTimeMax(self, qdatetimeedit, maxtime):
         """
         Update max date & time of QDateTimeEdit from unix time in secs
         """
-        return qdatetimeedit.setMaximumDateTime(
-            self._createDateTimeFromUnix(maxtime))
+        return qdatetimeedit.setMaximumDateTime(self._createDateTimeFromUnix(maxtime))
 
     # getter
 
@@ -832,8 +842,9 @@ class CommonWidgetInterface:
 
     # setter
 
-    def _addComboValues(self, combo_widget, item_tuples,
-                        current_data=None, clear=False):
+    def _addComboValues(
+        self, combo_widget, item_tuples, current_data=None, clear=False
+    ):
         """
         Add combo items by list of (item_text, item_data) tuples
         """
@@ -855,7 +866,9 @@ class CommonWidgetInterface:
         """
         Remove items by list of (item_text, item_data) tuples
         """
-        return self._removeComboItemsByData(combo_widget, [item[1] for item in item_tuples])
+        return self._removeComboItemsByData(
+            combo_widget, [item[1] for item in item_tuples]
+        )
 
     def _removeComboItemsByData(self, combo_widget, data_to_remove):
         """
@@ -932,8 +945,7 @@ class CommonWidgetInterface:
 
     # setter
 
-    def _addListValues(self, list_widget, item_tuples,
-                       current_data=None, clear=False):
+    def _addListValues(self, list_widget, item_tuples, current_data=None, clear=False):
         """
         Add list items by list of (item_text, item_data) tuples
         """
@@ -952,7 +964,9 @@ class CommonWidgetInterface:
         """
         Remove items by list of (item_text, item_data) tuples
         """
-        return self._removeListItemsByData(list_widget, [item[1] for item in item_tuples])
+        return self._removeListItemsByData(
+            list_widget, [item[1] for item in item_tuples]
+        )
 
     def _removeListItemsByData(self, list_widget, data_to_remove):
         """
@@ -970,7 +984,7 @@ class CommonWidgetInterface:
         """
         list_widget.takeItem(list_widget.row(item))
         # takeItem does not delete the QListWidgetItem:
-        del(item)
+        del item
 
     def _setListCurrentByData(self, list_widget: QWidget, item_data: Any):
         """
@@ -1051,9 +1065,10 @@ class CommonWidgetInterface:
         bold = font_dict.get("bold", None)
         italic = font_dict.get("italic", None)
 
-        assert family is not None and isinstance(family, STRINGTYPES), \
-            "font family needs to be provided as a string type"
-        
+        assert family is not None and isinstance(
+            family, STRINGTYPES
+        ), "font family needs to be provided as a string type"
+
         font = QFont(font_dict["family"])
 
         if size is not None:
@@ -1088,6 +1103,6 @@ class CommonWidgetInterface:
             "family": font_widget.family(),
             "size": font_widget.pointSize(),
             "bold": font_widget.bold(),
-            "italic": font_widget.italic()
+            "italic": font_widget.italic(),
         }
         return font_dict

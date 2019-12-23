@@ -42,10 +42,7 @@ import os
 from .._vendor.types import ModuleType
 from .._vendor.typing import Optional
 
-__all__ = [
-    "importAny",
-    "addPathToModuleLookup"
-]
+__all__ = ["importAny", "addPathToModuleLookup"]
 
 # Third-party add-on imports
 ######################################################################
@@ -69,7 +66,7 @@ def importAny(*modules: str) -> Optional[ModuleType]:
             return __import__(mod)
         except ImportError:
             pass
-    raise ImportError("Requires one of " + ', '.join(modules))
+    raise ImportError("Requires one of " + ", ".join(modules))
 
 
 # Registering external libraries & modules
@@ -92,6 +89,7 @@ def importAny(*modules: str) -> Optional[ModuleType]:
 # (e.g. third-party packages depending on stdlib modules missing
 # in Anki's Python distribution).
 
+
 def addPathToModuleLookup(path: str) -> None:
     """
     Add modules shipped with the add-on to Python module search path
@@ -108,7 +106,7 @@ def addPathToModuleLookup(path: str) -> None:
 # packaged module or standalone executables)
 ######################################################################
 
-class BinaryInstaller(object):
 
+class BinaryInstaller(object):
     def __init__(self):
         raise NotImplementedError

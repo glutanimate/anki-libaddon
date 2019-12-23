@@ -36,7 +36,10 @@ Add-on configuration storages
 from aqt.main import AnkiQt
 from anki.hooks import addHook
 
-from typing import Any, Optional, Hashable  # FIXME: import from _vendor
+try:
+    from typing import Any, Optional, Hashable
+except ImportError:
+    from ...._vendor.typing import Any, Optional, Hashable
 
 from ...._vendor.packaging import version
 from ....util.structures import deepMergeDicts
@@ -53,7 +56,7 @@ __all__ = [
     "ProfileConfigStorage",
     "MetaConfigStorage",
     "LibaddonMetaConfigStorage",
-    "SyncedConfigStorage"
+    "SyncedConfigStorage",
 ]
 
 
@@ -62,8 +65,9 @@ class AnkiConfigStorage(ConfigStorage):
 
     name = "profile"
 
-    def __init__(self, mw: AnkiQt, namespace: str,
-                 defaults: dict, native_gui: bool=True):
+    def __init__(
+        self, mw: AnkiQt, namespace: str, defaults: dict, native_gui: bool = True
+    ):
         self._ensure_defaults_versioned(defaults)
         super().__init__(mw, namespace, defaults=defaults, native_gui=native_gui)
         self._deferred: bool = False
@@ -76,8 +80,7 @@ class AnkiConfigStorage(ConfigStorage):
 
     def _ensure_defaults_versioned(self, defaults):
         if not isinstance(defaults, dict) or not defaults.get("version"):
-            raise ConfigError(
-                "Defaults need to include a 'version' key/value pair")
+            raise ConfigError("Defaults need to include a 'version' key/value pair")
 
     @property
     def _configObject(self) -> dict:
@@ -109,12 +112,11 @@ class AnkiConfigStorage(ConfigStorage):
         parsed_version_default = version.parse(default_version)
 
         # Upgrade config version if necessary
-        if (parsed_version_current < parsed_version_default):
-            config_object[conf_key] = deepMergeDicts(
-                defaults, storage_dict, new=True)
+        if parsed_version_current < parsed_version_default:
+            config_object[conf_key] = deepMergeDicts(defaults, storage_dict, new=True)
             config_object[conf_key]["version"] = default_version
             self._flush()
-        elif (parsed_version_current > parsed_version_default):
+        elif parsed_version_current > parsed_version_default:
             # TODO: Figure out where to handle
             raise ConfigFutureError("Config is newer than add-on release")
 
@@ -124,7 +126,7 @@ class AnkiConfigStorage(ConfigStorage):
         data = self._configObject.get(self._namespace)
         self.data = data or {}
         super().load()
-        return (data is not None)
+        return data is not None
 
     def save(self) -> None:
         self._configObject[self._namespace] = self.data

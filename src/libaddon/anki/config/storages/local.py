@@ -41,14 +41,14 @@ from .base import ConfigStorage
 
 __all__ = ["LocalConfigStorage"]
 
+
 class LocalConfigStorage(ConfigStorage):
 
     name = "local"
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self._defaults = self._mw.addonManager.addonConfigDefaults(
-            ADDON.MODULE) or {}
+        self._defaults = self._mw.addonManager.addonConfigDefaults(ADDON.MODULE) or {}
         self._namespace = ADDON.MODULE  # no custom namespaces supported
 
     def initialize(self) -> bool:
@@ -67,19 +67,18 @@ class LocalConfigStorage(ConfigStorage):
         data = self._mw.addonManager.getConfig(self._namespace)
         self.data = data or {}
         super().load()
-        return (data is not None)
+        return data is not None
 
     def save(self) -> None:
         self._mw.addonManager.writeConfig(self._namespace, self.data)
         super().save()
 
     def _ensureLoadAfterConfigGUIFinished(self) -> None:
-        self._mw.addonManager.setConfigUpdatedAction(
-            self._namespace, self.load)
+        self._mw.addonManager.setConfigUpdatedAction(self._namespace, self.load)
 
     def _ensureSaveBeforeConfigGUILoaded(self) -> None:
         """ugly workaround, drop as soon as possible"""
-        
+
         from aqt.addons import AddonsDialog
 
         def wrappedOnConfig(addonsDialog: AddonsDialog, *args, **kwargs):
@@ -89,5 +88,4 @@ class LocalConfigStorage(ConfigStorage):
                 return
             self.save()
 
-        AddonsDialog.onConfig = wrap(
-            AddonsDialog.onConfig, wrappedOnConfig, "before")
+        AddonsDialog.onConfig = wrap(AddonsDialog.onConfig, wrappedOnConfig, "before")

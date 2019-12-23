@@ -1,4 +1,3 @@
-
 from collections import UserDict
 
 from anki.hooks import addHook, runHook
@@ -14,8 +13,13 @@ from .interface import ConfigInterface
 
 
 class ConfigManager(UserDict, ConfigInterface):
-    def __init__(self, mw, namespace, config_dict: Optional[dict]=None,
-                 config_action: Callable=None):
+    def __init__(
+        self,
+        mw,
+        namespace,
+        config_dict: Optional[dict] = None,
+        config_action: Callable = None,
+    ):
         super().__init__()
         self._mw = mw
         self._namespace = namespace
@@ -32,8 +36,7 @@ class ConfigManager(UserDict, ConfigInterface):
         try:
             assert isinstance(value, ConfigStorage)
         except AssertionError:
-            raise ConfigError(
-                "Value to be set needs to be a valid ConfigStorage")
+            raise ConfigError("Value to be set needs to be a valid ConfigStorage")
 
     def load(self, config_dict):
         for storage_name, default_values in self._defaults:
@@ -42,9 +45,11 @@ class ConfigManager(UserDict, ConfigInterface):
             except KeyError:
                 raise ConfigError(f"Storage not implemented: {storage_name}")
             storage = StorageClass(
-                self._mw, self._namespace,
+                self._mw,
+                self._namespace,
                 defaults=self._defaults,
-                native_options=(not self._config_action))
+                native_options=(not self._config_action),
+            )
             if not storage.delay:
                 storage.load()
             else:

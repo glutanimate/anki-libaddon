@@ -53,6 +53,6 @@ def openFile(path: str) -> None:
         except (OSError, UnicodeDecodeError):
             pass
     elif sys.platform.startswith("darwin"):
-        subprocess.call(('open', path))
+        subprocess.call(("open", path))
     else:
         subprocess.call(("xdg-open", path))

@@ -47,10 +47,13 @@ __all__ = ["MappedDialog"]
 
 
 class MappedDialog(BasicDialog):
-
     def __init__(
-        self, mapped_widgets: Union[list, tuple], data: dict, defaults: dict,
-        form_module: Optional[ModuleType]=None, parent: Optional[QWidget]=None,
+        self,
+        mapped_widgets: Union[list, tuple],
+        data: dict,
+        defaults: dict,
+        form_module: Optional[ModuleType] = None,
+        parent: Optional[QWidget] = None,
         **kwargs
     ):
         """
@@ -150,8 +153,7 @@ class MappedDialog(BasicDialog):
         >     ))
         > )
         """
-        super().__init__(form_module=form_module,
-                         parent=parent, **kwargs)
+        super().__init__(form_module=form_module, parent=parent, **kwargs)
         self._mapped_widgets = mapped_widgets
         self._defaults = defaults
         self._data = data
@@ -168,13 +170,11 @@ class MappedDialog(BasicDialog):
     def getData(self) -> dict:
         for widget_name, properties in self._mapped_widgets:
             for key, property_dict in properties:
-                data_path = self._dataPathToList(
-                    property_dict.get("dataPath", ""))
+                data_path = self._dataPathToList(property_dict.get("dataPath", ""))
                 if not data_path:  # property irrelevant for config
                     continue
                 widget_val = self.interface.get(widget_name, key)
-                self._widgetToDataVal(self._data, property_dict, widget_val,
-                                      data_path)
+                self._widgetToDataVal(self._data, property_dict, widget_val, data_path)
         return self._data
 
     def restoreData(self) -> None:
@@ -185,8 +185,7 @@ class MappedDialog(BasicDialog):
     def _setupEvents(self) -> None:
         super()._setupEvents()
         if getattr(self.form, "buttonBox", None):
-            restore_btn = self.form.buttonBox.button(
-                QDialogButtonBox.RestoreDefaults)
+            restore_btn = self.form.buttonBox.button(QDialogButtonBox.RestoreDefaults)
             if restore_btn:
                 restore_btn.clicked.connect(self.restoreData)
 
@@ -196,13 +195,14 @@ class MappedDialog(BasicDialog):
         if not path:
             return []
         crumbs = path.split("/")
-        return [c if not c.strip("-").isdigit() else
-                int(c.strip("-")) * (-1 if c.startswith("-") else 1)
-                for c in crumbs]
+        return [
+            c
+            if not c.strip("-").isdigit()
+            else int(c.strip("-")) * (-1 if c.startswith("-") else 1)
+            for c in crumbs
+        ]
 
-    def _dataToWidgetVal(
-        self, data: dict, property_dict: dict
-    ) -> Optional[Any]:
+    def _dataToWidgetVal(self, data: dict, property_dict: dict) -> Optional[Any]:
         """
         Get value from config and translate it to valid widget
         value, optionally pre-processing it using defined
@@ -216,8 +216,7 @@ class MappedDialog(BasicDialog):
         Returns:
             object -- Valid value for widget
         """
-        data_path = self._dataPathToList(
-            property_dict.get("dataPath", ""))
+        data_path = self._dataPathToList(property_dict.get("dataPath", ""))
         setter_name = property_dict.get("setter", "")
         setter = getattr(self, setter_name, None) if setter_name else None
         data_val = getNestedValue(data, data_path) if data_path else None
@@ -230,8 +229,11 @@ class MappedDialog(BasicDialog):
         return widget_val
 
     def _widgetToDataVal(
-        self, data: dict, property_dict: dict, widget_val: Optional[Any],
-        data_path: Union[list, tuple]
+        self,
+        data: dict,
+        property_dict: dict,
+        widget_val: Optional[Any],
+        data_path: Union[list, tuple],
     ):
         """
         Get widget state/value and translate it to valid

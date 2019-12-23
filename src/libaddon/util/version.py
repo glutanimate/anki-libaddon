@@ -36,7 +36,8 @@ Utilities for semantic version comparisons
 from .._vendor.packaging import version
 from .._vendor.typing import Optional
 
-def checkVersion(current: str, lower: str, upper: Optional[str]=None) -> bool:
+
+def checkVersion(current: str, lower: str, upper: Optional[str] = None) -> bool:
     """Generic version checker
 
     Checks whether specified version is in specified range
@@ -51,10 +52,11 @@ def checkVersion(current: str, lower: str, upper: Optional[str]=None) -> bool:
     Returns:
         bool -- Whether current version is in specified range
     """
-    
+
     if upper is not None:
         current_parsed = version.parse(current)
-        return (current_parsed >= version.parse(lower) and
-                current_parsed < version.parse(upper))
+        return current_parsed >= version.parse(
+            lower
+        ) and current_parsed < version.parse(upper)
 
     return version.parse(current) >= version.parse(lower)

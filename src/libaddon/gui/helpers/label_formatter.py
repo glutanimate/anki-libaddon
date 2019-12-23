@@ -39,15 +39,13 @@ from PyQt5.QtCore import QRegExp, Qt
 
 from ...addon import ADDON
 
-format_dict = {
-    "ADDON_NAME": ADDON.NAME,
-    "ADDON_VERSION": ADDON.VERSION,
-}
+format_dict = {"ADDON_NAME": ADDON.NAME, "ADDON_VERSION": ADDON.VERSION}
 
 # TODO: add custom callable type annotation for linkhandler
 def formatLabels(dialog: QWidget, linkhandler=None):
-    for widget in dialog.findChildren((QLabel, QPushButton), QRegExp(".*"),
-                                      Qt.FindChildrenRecursively):
+    for widget in dialog.findChildren(
+        (QLabel, QPushButton), QRegExp(".*"), Qt.FindChildrenRecursively
+    ):
         if widget.objectName().startswith("fmt"):
             widget.setText(widget.text().format(**format_dict))
         if linkhandler and isinstance(widget, QLabel):

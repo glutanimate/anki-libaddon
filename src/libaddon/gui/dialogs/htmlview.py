@@ -43,11 +43,8 @@ from .basic import BasicDialog
 
 
 class HTMLViewer(BasicDialog):
-
     def __init__(
-        self, html: str,
-        title: Optional[str]=None,
-        parent: Optional[QWidget]=None
+        self, html: str, title: Optional[str] = None, parent: Optional[QWidget] = None
     ):
         super().__init__(parent=parent)
         if ANKI.PLATFORM == "win":

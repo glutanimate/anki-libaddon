@@ -1,4 +1,3 @@
-
 from abc import abstractmethod, abstractproperty
 from collections.abc import MutableMapping
 

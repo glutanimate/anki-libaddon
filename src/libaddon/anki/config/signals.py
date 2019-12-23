@@ -1,5 +1,6 @@
 from PyQt5.QtCore import pyqtSignal, QObject
 
+
 class ConfigSignals(QObject):
     initialized = pyqtSignal()
     saved = pyqtSignal()

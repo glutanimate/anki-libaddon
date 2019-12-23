@@ -37,11 +37,7 @@ from .._vendor.typing import NamedTuple
 from ..anki import ANKI
 from ..util.filesystem import ensureExists
 
-__all__ = [
-    "__version__",
-    "AddonData",
-    "ADDON"
-]
+__all__ = ["__version__", "AddonData", "ADDON"]
 
 
 class AddonData(NamedTuple):

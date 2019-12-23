@@ -41,7 +41,7 @@ from ..._vendor.typing import Optional
 
 
 class QColorButton(QPushButton):
-    def __init__(self, parent: Optional[QWidget]=None, color: str="#000000"):
+    def __init__(self, parent: Optional[QWidget] = None, color: str = "#000000"):
         super().__init__(parent=parent)
         self._updateButtonColor(color)
         self.clicked.connect(self._chooseColor)

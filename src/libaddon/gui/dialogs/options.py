@@ -45,8 +45,13 @@ from ...addon import ADDON
 from ...anki import ANKI
 from ...anki.config.manager import ConfigManager
 
-from ...util.logging import (toggleDebugging, isDebuggingOn,
-                             getLatestLog, openLog, clearLog)
+from ...util.logging import (
+    toggleDebugging,
+    isDebuggingOn,
+    getLatestLog,
+    openLog,
+    clearLog,
+)
 
 from ..content.about import getAboutString
 from ..helpers.label_formatter import formatLabels
@@ -55,12 +60,13 @@ from .mapped import MappedDialog
 
 
 class OptionsDialog(MappedDialog):
-
     def __init__(
-        self, mapped_widgets: Union[list, tuple],
+        self,
+        mapped_widgets: Union[list, tuple],
         config: ConfigManager,
-        form_module: Optional[ModuleType]=None,
-        parent: Optional[QWidget]=None, **kwargs
+        form_module: Optional[ModuleType] = None,
+        parent: Optional[QWidget] = None,
+        **kwargs
     ):
         """
         Creates an options dialog with the provided Qt form and populates its
@@ -87,8 +93,12 @@ class OptionsDialog(MappedDialog):
         # beforehand:
         self.config = config
         super().__init__(
-            mapped_widgets, self.config.all, self.config.defaults,
-            form_module=form_module, parent=parent)
+            mapped_widgets,
+            self.config.all,
+            self.config.defaults,
+            form_module=form_module,
+            parent=parent,
+        )
         # Instance methods that modify the initialized UI should either be
         # called from self._setupUI or from here
 
@@ -125,13 +135,12 @@ class OptionsDialog(MappedDialog):
             self.form.htmlAbout.setOpenLinks(False)
             self.form.htmlAbout.anchorClicked.connect(self._linkHandler)
 
-    def _setupLabDebug(self) ->None:
+    def _setupLabDebug(self) -> None:
         label = getattr(self.form, "labDebug", None)
         if not label:
             return
         if isDebuggingOn():
-            label.setText(
-                "<span style='color:#ff0000;'><b>DEBUG ACTIVE</b></span>")
+            label.setText("<span style='color:#ff0000;'><b>DEBUG ACTIVE</b></span>")
         else:
             label.setText("")
 

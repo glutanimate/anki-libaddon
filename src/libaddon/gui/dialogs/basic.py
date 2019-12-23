@@ -44,10 +44,11 @@ __all__ = ["BasicDialog"]
 
 
 class BasicDialog(QDialog):
-
     def __init__(
-        self, form_module: Optional[ModuleType]=None,
-        parent: Optional[QWidget]=None, **kwargs
+        self,
+        form_module: Optional[ModuleType] = None,
+        parent: Optional[QWidget] = None,
+        **kwargs
     ):
         super().__init__(parent=parent, **kwargs)
         self.parent = parent  # type: ignore FIXME: don't overwrite

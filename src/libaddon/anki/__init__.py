@@ -71,14 +71,16 @@ class AnkiData:
 
     def __repr__(self):
         # TODO: automate
-        return str({
-            "PLATFORM": self.PLATFORM,
-            "VERSION": self.VERSION,
-            "JSBRIDGE": self.JSBRIDGE,
-            "SCHEDVER": self.SCHEDVER,
-            "PATH_ADDONS": self.PATH_ADDONS,
-            "PATH_MEDIA": self.PATH_MEDIA
-        })
+        return str(
+            {
+                "PLATFORM": self.PLATFORM,
+                "VERSION": self.VERSION,
+                "JSBRIDGE": self.JSBRIDGE,
+                "SCHEDVER": self.SCHEDVER,
+                "PATH_ADDONS": self.PATH_ADDONS,
+                "PATH_MEDIA": self.PATH_MEDIA,
+            }
+        )
 
 
 ANKI = AnkiData()

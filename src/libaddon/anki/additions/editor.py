@@ -35,10 +35,12 @@ Helpers for interacting with Anki's editor instances
 
 # Handling async JS execution when saving editor content
 
+
 def editorSaveThen(callback):
     def onSaved(editor, *args, **kwargs):
         # uses evalWithCallback internally:
         editor.saveNow(lambda: callback(editor, *args, **kwargs))
+
     return onSaved
 
 
@@ -53,4 +55,5 @@ def widgetEditorSaveThen(callback):
         """
         # uses evalWithCallback internally:
         widget.editor.saveNow(lambda: callback(widget, *args, **kwargs))
+
     return onSaved

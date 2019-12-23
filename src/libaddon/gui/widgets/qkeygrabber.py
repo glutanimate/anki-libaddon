@@ -43,12 +43,9 @@ from ...anki import ANKI
 
 
 PLATFORM_MODKEY_NAMES = {
-    "lin": {"meta": "Meta", "ctrl": "Ctrl",
-            "alt": "Alt", "shift": "Shift"},
-    "win": {"meta": "Win", "ctrl": "Ctrl", "alt":
-            "Alt", "shift": "Shift"},
-    "mac": {"meta": "Control", "ctrl": "Command",
-            "alt": "Option", "shift": "Shift"}
+    "lin": {"meta": "Meta", "ctrl": "Ctrl", "alt": "Alt", "shift": "Shift"},
+    "win": {"meta": "Win", "ctrl": "Ctrl", "alt": "Alt", "shift": "Shift"},
+    "mac": {"meta": "Control", "ctrl": "Command", "alt": "Option", "shift": "Shift"},
 }
 
 
@@ -106,8 +103,9 @@ class QKeyGrab(QDialog):
     def _setupUI(self):
         """Basic UI setup"""
         mainLayout = QVBoxLayout()
-        self.label = QLabel("Please press the key combination\n"
-                            "you would like to assign")
+        self.label = QLabel(
+            "Please press the key combination\n" "you would like to assign"
+        )
         self.label.setAlignment(Qt.AlignCenter)
         mainLayout.addWidget(self.label)
         self.setLayout(mainLayout)
@@ -156,18 +154,21 @@ class QKeyGrab(QDialog):
         # TODO: platform-specific messages
         msg = None
         if not (self.shift or self.ctrl or self.alt or self.meta):
-            msg = ("Please use at least one keyboard modifier\n"
-                   "({meta}, {ctrl}, {alt}, {shift})".format(
-                       **self.modkey_names))
-        if (self.shift and not (self.ctrl or self.alt or self.meta)):
-            msg = ("Shift needs to be combined with at least one\n"
-                   "other modifier ({meta}, {ctrl}, {alt})".format(
-                       **self.modkey_names))
+            msg = (
+                "Please use at least one keyboard modifier\n"
+                "({meta}, {ctrl}, {alt}, {shift})".format(**self.modkey_names)
+            )
+        if self.shift and not (self.ctrl or self.alt or self.meta):
+            msg = (
+                "Shift needs to be combined with at least one\n"
+                "other modifier ({meta}, {ctrl}, {alt})".format(**self.modkey_names)
+            )
         if not self.extra:
-            msg = ("Please press at least one key that is \n"
-                   "not a modifier (not {meta}, {ctrl}, "
-                   "{alt}, or {shift})".format(
-                       **self.modkey_names))
+            msg = (
+                "Please press at least one key that is \n"
+                "not a modifier (not {meta}, {ctrl}, "
+                "{alt}, or {shift})".format(**self.modkey_names)
+            )
 
         if msg:
             self.label.setText(msg)

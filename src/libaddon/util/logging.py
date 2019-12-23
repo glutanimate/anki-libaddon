@@ -46,8 +46,12 @@ from ..addon import ADDON
 from ..addon.debug import debugInfo
 
 __all__ = [
-    "logger", "enableDebugging", "disableDebugging", "maybeStartDebugging",
-    "startDebugging", "PATH_LOG"
+    "logger",
+    "enableDebugging",
+    "disableDebugging",
+    "maybeStartDebugging",
+    "startDebugging",
+    "PATH_LOG",
 ]
 
 # FIXME: REFACTOR! move anki-/addon-specific code to addon.debug
@@ -60,11 +64,13 @@ logger = logging.getLogger(ADDON.MODULE)
 
 _cli_handler = logging.StreamHandler(sys.stdout)
 _file_handler = handlers.RotatingFileHandler(
-    PATH_LOG, maxBytes=2000000, backupCount=1, delay=True)
+    PATH_LOG, maxBytes=2000000, backupCount=1, delay=True
+)
 
-_fmt = ("%(asctime)s %(filename)s:%(funcName)s:%(lineno)-8s "
-        "%(levelname)-8s: %(message)s")
-_fmt_date = '%Y-%m-%dT%H:%M:%S%z'
+_fmt = (
+    "%(asctime)s %(filename)s:%(funcName)s:%(lineno)-8s " "%(levelname)-8s: %(message)s"
+)
+_fmt_date = "%Y-%m-%dT%H:%M:%S%z"
 
 _formatter = logging.Formatter(_fmt, _fmt_date)
 _file_handler.setFormatter(_formatter)
@@ -121,12 +127,15 @@ def maybeStartDebugging():
 def startDebugging():
     logger.setLevel(logging.DEBUG)
     time = datetime.today().strftime(_fmt_date)
-    logger.info("="*79)
-    logger.info(22 * " " + "START {name} log {time}".format(
-        name=ADDON.NAME, time=time) + 22 * " ")
-    logger.info("="*79)
+    logger.info("=" * 79)
+    logger.info(
+        22 * " "
+        + "START {name} log {time}".format(name=ADDON.NAME, time=time)
+        + 22 * " "
+    )
+    logger.info("=" * 79)
     logger.info(debugInfo())
-    logger.info("="*79)
+    logger.info("=" * 79)
 
 
 def stopDebugging():
@@ -145,8 +154,10 @@ def openLog():
     if not os.path.exists(PATH_LOG):
         return False
     from .filesystem import openFile
+
     openFile(PATH_LOG)
     return True
+
 
 def clearLog():
     if not os.path.exists(PATH_LOG):
