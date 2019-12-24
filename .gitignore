@@ -15,6 +15,7 @@ src/*/data/patrons.py
 # Python
 .python-version
 .mypy_cache/
+.pytest_cache/
 .ropeproject
 .env
 .venv
@@ -38,6 +39,7 @@ addon.json
 .gitold
 obsolete
 research
+anki_bases/
 # Linux FM
 .hidden
 .directory
