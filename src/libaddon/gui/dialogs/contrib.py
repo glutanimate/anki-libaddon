@@ -41,7 +41,7 @@ from PyQt5.QtWidgets import QWidget
 
 from aqt.utils import openLink
 
-from ..._vendor.types import ModuleType
+from ..._wrappers.types import ModuleType
 from ...addon import ADDON
 
 from ..helpers.label_formatter import formatLabels

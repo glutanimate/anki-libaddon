@@ -31,8 +31,7 @@
 
 import os
 
-from .._vendor.typing import NamedTuple
-
+from .._wrappers.typing import NamedTuple
 
 from ..anki import ANKI
 from ..util.filesystem import ensureExists

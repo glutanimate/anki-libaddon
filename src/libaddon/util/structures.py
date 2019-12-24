@@ -36,7 +36,7 @@ Data structure manipulation
 from functools import reduce
 from copy import deepcopy
 
-from .._vendor.typing import Union
+from .._wrappers.typing import Union
 
 # Utility functions for operating with nested objects
 

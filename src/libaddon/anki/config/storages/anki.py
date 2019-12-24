@@ -36,12 +36,10 @@ Add-on configuration storages
 from aqt.main import AnkiQt
 from anki.hooks import addHook
 
-try:
-    from typing import Any, Optional, Hashable
-except ImportError:
-    from ...._vendor.typing import Any, Optional, Hashable
+from ...._wrappers.typing import Any, Optional, Hashable
 
 from ...._vendor.packaging import version
+
 from ....util.structures import deepMergeDicts
 
 from ....anki.additions.hooks import HOOKS
@@ -59,6 +57,8 @@ __all__ = [
     "SyncedConfigStorage",
 ]
 
+
+# TODO: SUBCLASS DOCSTRINGS
 
 class AnkiConfigStorage(ConfigStorage):
     """abstract, never initialize directly"""
@@ -90,7 +90,6 @@ class AnkiConfigStorage(ConfigStorage):
             config_object = None
         if config_object is None:
             raise ConfigNotReadyError(f"{self.name} storage is not ready")
-        print(config_object)
         return self._getUpdatedConfig(config_object)
 
     def _actualConfigObject(self) -> dict:

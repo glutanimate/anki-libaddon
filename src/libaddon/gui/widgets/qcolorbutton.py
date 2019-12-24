@@ -37,7 +37,7 @@ from PyQt5.QtCore import QSize
 from PyQt5.QtGui import QColor, QIcon, QPixmap
 from PyQt5.QtWidgets import QColorDialog, QPushButton, QWidget
 
-from ..._vendor.typing import Optional
+from ..._wrappers.typing import Optional
 
 
 class QColorButton(QPushButton):

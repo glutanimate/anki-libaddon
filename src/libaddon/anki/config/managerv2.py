@@ -2,8 +2,9 @@ from collections import UserDict
 
 from anki.hooks import addHook, runHook
 
+from ..._wrappers.typing import Any, Callable, Hashable, List, Optional
+
 from ..._vendor.packaging import version
-from ..._vendor.typing import Any, Callable, Hashable, List, Optional
 from ...addon import ADDON
 from ...util.structures import deepMergeDicts
 

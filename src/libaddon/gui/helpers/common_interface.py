@@ -65,7 +65,7 @@ from PyQt5.QtWidgets import (
     QWidget,
 )
 
-from ..._vendor.typing import Union, Optional, Any
+from ..._wrappers.typing import Union, Optional, Any
 
 from ...util.structures import getNestedAttribute
 

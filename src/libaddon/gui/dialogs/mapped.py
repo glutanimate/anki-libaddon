@@ -36,8 +36,8 @@ keys and/or setter/getter methods.
 
 from PyQt5.QtWidgets import QDialogButtonBox, QWidget
 
-from ..._vendor.types import ModuleType
-from ..._vendor.typing import Optional, Union, Any
+from ..._wrappers.types import ModuleType
+from ..._wrappers.typing import Optional, Union, Any
 
 from ...util.structures import getNestedValue, setNestedValue
 

@@ -38,8 +38,8 @@ from PyQt5.QtWidgets import QApplication, QWidget
 
 from aqt.utils import openLink, tooltip
 
-from ..._vendor.typing import Optional, Union, Any
-from ..._vendor.types import ModuleType
+from ..._wrappers.typing import Optional, Union, Any
+from ..._wrappers.types import ModuleType
 
 from ...addon import ADDON
 from ...anki import ANKI

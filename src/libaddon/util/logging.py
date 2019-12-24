@@ -40,7 +40,7 @@ from datetime import datetime
 # need to vendorize 'logging' as Anki's 'logging' does not contain handlers
 from .._vendor import logging
 from .._vendor.logging import handlers
-from .._vendor.typing import Union
+from .._wrappers.typing import Union
 
 from ..addon import ADDON
 from ..addon.debug import debugInfo

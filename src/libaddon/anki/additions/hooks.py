@@ -1,4 +1,4 @@
-from ..._vendor.types import SimpleNamespace
+from ..._wrappers.types import SimpleNamespace
 
 
 class HOOKS(SimpleNamespace):

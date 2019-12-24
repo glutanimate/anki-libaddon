@@ -1,5 +1,5 @@
-from libaddon._vendor.typing import Callable
-from typing import List
+from ..._wrappers.typing import Callable, List
+
 from libaddon.anki.config.storages import ConfigStorage
 
 

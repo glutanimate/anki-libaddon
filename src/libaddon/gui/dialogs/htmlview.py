@@ -35,7 +35,7 @@ Simple dialog for viewing HTML
 
 from PyQt5.QtWidgets import QTextBrowser, QVBoxLayout, QWidget
 
-from ..._vendor.typing import Optional
+from ..._wrappers.typing import Optional
 
 from ...anki import ANKI
 

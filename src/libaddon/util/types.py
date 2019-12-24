@@ -29,10 +29,10 @@
 #
 # Any modifications to this file must keep this entire header intact.
 
-from .._vendor.typing import Union
+from .._wrappers.typing import Union
 
-# from .._vendor.typing_extensions import Protocol, runtime
-# from .._vendor.typing import Any, Union
+# from .._wrappers.typing_extensions import Protocol, runtime
+# from .._wrappers.typing import Any, Union
 
 # @runtime
 # class ItemGettable(Protocol):

@@ -37,8 +37,8 @@ from PyQt5.QtWidgets import QDialog, QWidget
 
 from ..helpers.common_interface import CommonWidgetInterface
 
-from ..._vendor.types import ModuleType
-from ..._vendor.typing import Optional
+from ..._wrappers.types import ModuleType
+from ..._wrappers.typing import Optional
 
 __all__ = ["BasicDialog"]
 

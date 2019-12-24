@@ -38,7 +38,7 @@ from aqt import mw
 from anki import version as anki_version
 from anki.utils import isMac, isWin
 
-from .._vendor.typing import Optional
+from .._wrappers.typing import Optional
 
 
 class AnkiData:
